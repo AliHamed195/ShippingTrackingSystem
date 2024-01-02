@@ -7,10 +7,12 @@ namespace ShippingTrackingSystem.BackEnd.Repository
     public class AccountRepository : IAccountRepository
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public AccountRepository(UserManager<ApplicationUser> userManager)
+        public AccountRepository(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
             _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         public async Task<ApplicationUser?> CreateUserAsync(ApplicationUser user, string password)
@@ -81,6 +83,43 @@ namespace ShippingTrackingSystem.BackEnd.Repository
             {
                 var result = await _userManager.UpdateAsync(user);
                 return result.Succeeded;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public async Task<IdentityResult?> RegisterUserAsync(ApplicationUser user, string password)
+        {
+            try
+            {
+                return await _userManager.CreateAsync(user, password);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        public async Task<SignInResult> LoginUserAsync(string username, string password, bool rememberMe)
+        {
+            try
+            {
+                return await _signInManager.PasswordSignInAsync(username, password, rememberMe, lockoutOnFailure: false);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<bool> LogoutUserAsync()
+        {
+            try
+            {
+                await _signInManager.SignOutAsync();
+                return true;
             }
             catch (Exception)
             {
