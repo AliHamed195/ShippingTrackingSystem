@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using ShippingTrackingSystem.Models.Context;
+using ShippingTrackingSystem.Services.Interfaces;
+using ShippingTrackingSystem.Services.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +23,8 @@ var provider = builder.Services.BuildServiceProvider();
 var configuration = provider.GetRequiredService<IConfiguration>();
 builder.Services.AddDbContext<MyDbContext>(item => item.UseSqlServer(configuration.GetConnectionString("conn")));
 
+// Services
+builder.Services.AddScoped<IFileService, FileService>();
 
 var app = builder.Build();
 
