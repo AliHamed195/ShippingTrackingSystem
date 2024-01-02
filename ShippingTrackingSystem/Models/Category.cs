@@ -5,7 +5,7 @@ namespace ShippingTrackingSystem.Models
     public class Category
     {
         [Key]
-        public int ID { get; set; }
+        public int Id { get; set; }
 
         [Required(ErrorMessage = "Please enter a Category Name")]
         [Display(Name = "Category Name")]

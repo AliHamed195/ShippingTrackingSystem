@@ -6,7 +6,7 @@ namespace ShippingTrackingSystem.Models
     public class Product
     {
         [Key]
-        public int ID { get; set; }
+        public int Id { get; set; }
 
         [Required(ErrorMessage = "Product name is required.")]
         [Display(Name = "Product Name")]
