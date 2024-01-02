@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using ShippingTrackingSystem.BackEnd.Interfaces;
+using ShippingTrackingSystem.BackEnd.Repository;
 using ShippingTrackingSystem.Models.Context;
 using ShippingTrackingSystem.Services.Interfaces;
 using ShippingTrackingSystem.Services.Repository;
@@ -25,6 +27,10 @@ builder.Services.AddDbContext<MyDbContext>(item => item.UseSqlServer(configurati
 
 // Services
 builder.Services.AddScoped<IFileService, FileService>();
+
+// Repositories
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+
 
 var app = builder.Build();
 

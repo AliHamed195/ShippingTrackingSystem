@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ShippingTrackingSystem.Models
 {
-    public class UserInfo : IdentityUser
+    public class ApplicationUser : IdentityUser
     {
         [Required(ErrorMessage = "User Address is required.")]
         public string Address { get; set; }
