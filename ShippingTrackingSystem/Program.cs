@@ -1,7 +1,26 @@
+using Microsoft.EntityFrameworkCore;
+using ShippingTrackingSystem.Models.Context;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+//Fore Views
+builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
+
+// Add services to the container. client side validation
+builder.Services.AddControllersWithViews(
+    options =>
+    {
+        options.ModelBindingMessageProvider.SetValueMustNotBeNullAccessor(_ => "This field is required");
+    });
+
+//for connection to database
+var provider = builder.Services.BuildServiceProvider();
+var configuration = provider.GetRequiredService<IConfiguration>();
+builder.Services.AddDbContext<MyDbContext>(item => item.UseSqlServer(configuration.GetConnectionString("conn")));
+
 
 var app = builder.Build();
 
