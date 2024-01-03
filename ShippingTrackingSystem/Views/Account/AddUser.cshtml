@@ -53,7 +53,7 @@
             <div class="p-lg-5">
                 <form asp-action="AddUser" method="post" id="registerForm">
                     @Html.AntiForgeryToken()
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div asp-validation-summary="All" class="text-danger"></div>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">

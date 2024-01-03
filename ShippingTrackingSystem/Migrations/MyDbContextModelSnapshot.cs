@@ -253,7 +253,7 @@ namespace ShippingTrackingSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("ShippingTrackingSystem.Models.Notification", b =>
@@ -294,7 +294,7 @@ namespace ShippingTrackingSystem.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Notifications");
+                    b.ToTable("Notifications", (string)null);
                 });
 
             modelBuilder.Entity("ShippingTrackingSystem.Models.Order", b =>
@@ -326,7 +326,7 @@ namespace ShippingTrackingSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("ShippingTrackingSystem.Models.OrderDetail", b =>
@@ -350,7 +350,7 @@ namespace ShippingTrackingSystem.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("OrderDetails");
+                    b.ToTable("OrderDetails", (string)null);
                 });
 
             modelBuilder.Entity("ShippingTrackingSystem.Models.Product", b =>
@@ -393,7 +393,7 @@ namespace ShippingTrackingSystem.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("ShippingTrackingSystem.Models.ApplicationUser", b =>
