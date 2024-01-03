@@ -73,7 +73,7 @@
             <div class="col-lg-6 p-lg-5">
                 <h3 class="mb-4">Login now and enjoy</h3>
                 <form id="loginForm" method="post" asp-controller="Account" asp-action="Login">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div asp-validation-summary="All" class="text-danger"></div>
                     @Html.AntiForgeryToken()
                     <div class="form-group">
                         <label for="emailInput">Email address</label>

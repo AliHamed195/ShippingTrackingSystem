@@ -32,6 +32,7 @@ namespace ShippingTrackingSystem.Controllers
         {
             if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
             {
+                ModelState.AddModelError("", "Please write both email and password.");
                 return View();
             }
 
