@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ShippingTrackingSystem.BackEnd.Interfaces;
+using ShippingTrackingSystem.Enum;
 using ShippingTrackingSystem.Models;
 
 namespace ShippingTrackingSystem.Controllers
@@ -105,12 +106,48 @@ namespace ShippingTrackingSystem.Controllers
 
 
         [HttpGet("Register")]
-        public async Task<IActionResult> Register()
+        public IActionResult Register()
         {
-            var roles = await _accountRepository.GetRolesAsync();
-            ViewBag.Roles = new SelectList(roles, "Name", "Name");
-
             return View();
+        }
+
+        [HttpPost("Register")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(ApplicationUser user, string password)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    string roleName = UserRole.Customer.ToString();
+                    var result = await _accountRepository.RegisterUserAsync(user, password);
+                    if (result.Succeeded)
+                    {
+                        var roleAssignResult = await _accountRepository.AssignRoleAsync(user, roleName);
+                        if (roleAssignResult)
+                        {
+                            return RedirectToAction("UserList");
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("", "Failed to assign the role.");
+                        }
+                    }
+                    else
+                    {
+                        foreach (var error in result.Errors)
+                        {
+                            ModelState.AddModelError(string.Empty, error.Description);
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                    ModelState.AddModelError(string.Empty, "An error occurred while creating the user.");
+                }
+            }
+
+            return View(user);
         }
 
     }
