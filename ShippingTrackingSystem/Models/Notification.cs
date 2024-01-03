@@ -1,4 +1,6 @@
-﻿namespace ShippingTrackingSystem.Models
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace ShippingTrackingSystem.Models
 {
     public class Notification
     {
@@ -8,5 +10,7 @@
         public DateTime CreatedOn { get; set; } = DateTime.Now;
         public bool IsRead { get; set; } = false;
         public bool IsDeleted { get; set; } = false;
+        public string UserId { get; set; }
+        public IdentityUser? User { get; set; }
     }
 }

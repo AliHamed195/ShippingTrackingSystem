@@ -33,5 +33,8 @@ namespace ShippingTrackingSystem.Models
         public DateTime CreatedOn { get; set; } = DateTime.Now;
 
         public bool IsDeleted { get; set; } = false;
+
+        public int CategoryId { get; set; }
+        public Category? Category { get; set; }
     }
 }

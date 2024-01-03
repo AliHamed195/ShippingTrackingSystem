@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 
 namespace ShippingTrackingSystem.Models
 {
@@ -18,5 +19,7 @@ namespace ShippingTrackingSystem.Models
         public bool IsDeleted { get; set; } = false;
 
         public DateTime CreatedOn { get; set; } = DateTime.Now;
+
+        public virtual ICollection<Product> Products { get; set; }
     }
 }

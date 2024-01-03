@@ -9,5 +9,7 @@ namespace ShippingTrackingSystem.Models
         public string Address { get; set; }
 
         public DateTime CreatedOn { get; set; } = DateTime.Now;
+
+        public virtual ICollection<Notification> Notifications { get; set; }
     }
 }
