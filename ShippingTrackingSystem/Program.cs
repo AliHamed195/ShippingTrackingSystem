@@ -23,14 +23,16 @@ builder.Services.AddControllersWithViews(
     });
 
 //For connection to database
-var provider = builder.Services.BuildServiceProvider();
-var configuration = provider.GetRequiredService<IConfiguration>();
-builder.Services.AddDbContext<MyDbContext>(item => item.UseSqlServer(configuration.GetConnectionString("conn")));
+builder.Services.AddDbContext<MyDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("conn")));
 
-// For Identity
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-    .AddEntityFrameworkStores<MyDbContext>()
-    .AddDefaultTokenProviders();
+// Identity Managers
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+{
+    options.SignIn.RequireConfirmedAccount = false; // to avoid the email confirmation ...
+})
+.AddEntityFrameworkStores<MyDbContext>()
+.AddDefaultTokenProviders();
 
 
 // Services
@@ -38,7 +40,6 @@ builder.Services.AddScoped<IFileService, FileService>();
 
 // Repositories
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
-
 
 var app = builder.Build();
 
@@ -55,6 +56,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

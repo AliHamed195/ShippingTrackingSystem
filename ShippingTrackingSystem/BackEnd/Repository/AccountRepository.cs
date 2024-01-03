@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using ShippingTrackingSystem.BackEnd.Interfaces;
 using ShippingTrackingSystem.Models;
 
@@ -8,11 +9,13 @@ namespace ShippingTrackingSystem.BackEnd.Repository
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public AccountRepository(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public AccountRepository(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _roleManager = roleManager;
         }
 
         public async Task<ApplicationUser?> CreateUserAsync(ApplicationUser user, string password)
@@ -126,5 +129,24 @@ namespace ShippingTrackingSystem.BackEnd.Repository
                 return false;
             }
         }
+
+        public async Task<bool> AssignRoleAsync(ApplicationUser user, string roleName)
+        {
+            var roleExists = await _roleManager.RoleExistsAsync(roleName);
+            if (!roleExists)
+            {
+                return false;
+            }
+
+            var result = await _userManager.AddToRoleAsync(user, roleName);
+            return result.Succeeded;
+        }
+
+        public async Task<List<IdentityRole>> GetRolesAsync()
+        {
+            var roles = await _roleManager.Roles.ToListAsync();
+            return roles;
+        }
+
     }
 }

@@ -13,5 +13,7 @@ namespace ShippingTrackingSystem.BackEnd.Interfaces
         Task<IdentityResult?> RegisterUserAsync(ApplicationUser user, string password);
         Task<SignInResult> LoginUserAsync(string username, string password, bool rememberMe);
         Task<bool> LogoutUserAsync();
+        Task<bool> AssignRoleAsync(ApplicationUser user, string roleName);
+        Task<List<IdentityRole>> GetRolesAsync();
     }
 }
