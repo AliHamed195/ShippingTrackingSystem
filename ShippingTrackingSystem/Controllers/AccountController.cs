@@ -150,5 +150,15 @@ namespace ShippingTrackingSystem.Controllers
             return View(user);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                await _accountRepository.LogoutUserAsync();
+            }
+
+            return RedirectToAction(controllerName: "Account", actionName: "Login");
+        }
     }
 }
