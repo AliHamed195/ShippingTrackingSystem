@@ -74,14 +74,14 @@ namespace ShippingTrackingSystem.Controllers
                     var result = await _accountRepository.RegisterUserAsync(user, password);
                     if (result.Succeeded)
                     {
-                        var roleAssignResult = await _accountRepository.AssignRoleAsync(user, roleName);
-                        if (roleAssignResult)
+                        var (updateRoleSucceeded, updateRoleErrorMessage) = await _accountRepository.AssignRoleAsync(user, roleName);
+                        if (updateRoleSucceeded)
                         {
                             return RedirectToAction("UserList");
                         }
                         else
                         {
-                            ModelState.AddModelError("", "Failed to assign the role.");
+                            ModelState.AddModelError("", $"Failed to assign the role: {updateRoleErrorMessage}");
                         }
                     }
                     else

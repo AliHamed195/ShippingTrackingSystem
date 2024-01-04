@@ -80,16 +80,21 @@ namespace ShippingTrackingSystem.BackEnd.Repository
             }
         }
 
-        public async Task<bool> UpdateUserAsync(ApplicationUser user)
+        public async Task<(bool Succeeded, string ErrorMessage)> UpdateUserAsync(ApplicationUser user)
         {
             try
             {
                 var result = await _userManager.UpdateAsync(user);
-                return result.Succeeded;
+                if (result.Succeeded)
+                {
+                    return (true, null);
+                }
+
+                return (false, result.Errors.FirstOrDefault()?.Description ?? "Unknown error");
             }
             catch (Exception)
             {
-                return false;
+                return (true, "An error happednd. Please try again later.");
             }
         }
 
@@ -130,23 +135,54 @@ namespace ShippingTrackingSystem.BackEnd.Repository
             }
         }
 
-        public async Task<bool> AssignRoleAsync(ApplicationUser user, string roleName)
+        public async Task<(bool Succeeded, string ErrorMessage)> AssignRoleAsync(ApplicationUser user, string roleName)
         {
-            var roleExists = await _roleManager.RoleExistsAsync(roleName);
-            if (!roleExists)
+            try
             {
-                return false;
-            }
+                var roleExists = await _roleManager.RoleExistsAsync(roleName);
+                if (!roleExists)
+                {
+                    return (false, "Please select a valid role.");
+                }
 
-            var result = await _userManager.AddToRoleAsync(user, roleName);
-            return result.Succeeded;
+                var result = await _userManager.AddToRoleAsync(user, roleName);
+                if(result.Succeeded)
+                {
+                    return (true, null);
+                }
+
+                return (false, result.Errors.FirstOrDefault()?.Description ?? "Unknown error");
+            }
+            catch(Exception)
+            {
+                return (true, "An error happednd. Please try again later.");
+            }
         }
 
         public async Task<List<IdentityRole>> GetRolesAsync()
         {
-            var roles = await _roleManager.Roles.ToListAsync();
-            return roles;
+            try
+            {
+                var roles = await _roleManager.Roles.ToListAsync();
+                return roles;
+            }
+            catch (Exception)
+            {
+                return new List<IdentityRole>();
+            }
         }
 
+        public async Task<string?> GetUserRoleAsync(ApplicationUser user)
+        {
+            try
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+                return roles.FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
     }
 }

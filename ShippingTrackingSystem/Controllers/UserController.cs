@@ -53,14 +53,14 @@ namespace ShippingTrackingSystem.Controllers
                     var result = await _accountRepository.RegisterUserAsync(user, defaultPassword);
                     if (result.Succeeded)
                     {
-                        var roleAssignResult = await _accountRepository.AssignRoleAsync(user, roleName);
-                        if (roleAssignResult)
+                        var (updateRoleSucceeded, updateRoleErrorMessage) = await _accountRepository.AssignRoleAsync(user, roleName);
+                        if (updateRoleSucceeded)
                         {
-                            return RedirectToAction("UserList");
+                            return RedirectToAction(nameof(AllUsers));
                         }
                         else
                         {
-                            ModelState.AddModelError("", "Failed to assign the role.");
+                            ModelState.AddModelError("", $"Failed to assign the role: {updateRoleErrorMessage}");
                         }
                     }
                     else
@@ -87,24 +87,75 @@ namespace ShippingTrackingSystem.Controllers
         {
             if (string.IsNullOrEmpty(id))
             {
-                return RedirectToAction(nameof(AllUsers)); 
+                return RedirectToAction(nameof(AllUsers));
             }
 
-            try
+            var user = await _accountRepository.GetUserByIdAsync(id);
+            if (user == null)
             {
-                var user = await _accountRepository.GetUserByIdAsync(id);
-                if (user is null)
+                return RedirectToAction(nameof(AllUsers));
+            }
+
+            var roles = await _accountRepository.GetRolesAsync();
+            ViewBag.Roles = new SelectList(roles, "Name", "Name", await _accountRepository.GetUserRoleAsync(user));
+
+            return View(user);
+        }
+
+        [HttpPost("Edit/{id}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditUser(string id, ApplicationUser user, string roleName)
+        {
+            if (ModelState.IsValid)
+            {
+                try
                 {
-                    return RedirectToAction(nameof(AllUsers));
-                }
+                    var oldUser = await _accountRepository.GetUserByIdAsync(id);
+                    if (oldUser == null)
+                    {
+                        return RedirectToAction(nameof(AllUsers));
+                    }
 
-                return View(user);
+                    oldUser.UserName = user.UserName;
+                    oldUser.Email = user.Email;
+                    oldUser.Address = user.Address;
+
+                    var (updateUserSucceeded, updateUserErrorMessage) = await _accountRepository.UpdateUserAsync(oldUser);
+                    if (updateUserSucceeded)
+                    {
+                        var userOldRole = await _accountRepository.GetUserRoleAsync(user);
+                        if (userOldRole != null && userOldRole != roleName)
+                        {
+                            var (updateRoleSucceeded, updateRoleErrorMessage) = await _accountRepository.AssignRoleAsync(oldUser, roleName);
+                            if (updateRoleSucceeded)
+                            {
+                                return RedirectToAction(nameof(AllUsers));
+                            }
+                            else
+                            {
+                                ModelState.AddModelError("", $"Failed to update the user role: {updateRoleErrorMessage}");
+                            }
+                        }
+                        else
+                        {
+                            return RedirectToAction(nameof(AllUsers));
+                        }
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", $"Failed to update the user: {updateUserErrorMessage}");
+                    }
+                }
+                catch (Exception)
+                {
+                    ModelState.AddModelError("", "An error occurred while updating the user.");
+                }
             }
-            catch (Exception)
-            {
-                ModelState.AddModelError(string.Empty, "An error occurred while getting the user.");
-                return View(new ApplicationUser());
-            }
+
+            var roles = await _accountRepository.GetRolesAsync();
+            ViewBag.Roles = new SelectList(roles, "Name", "Name", await _accountRepository.GetUserRoleAsync(user));
+
+            return View(user);
         }
 
         [HttpGet("Details/{id}")]

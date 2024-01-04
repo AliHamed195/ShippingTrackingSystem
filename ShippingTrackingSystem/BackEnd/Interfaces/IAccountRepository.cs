@@ -8,12 +8,14 @@ namespace ShippingTrackingSystem.BackEnd.Interfaces
         Task<ApplicationUser?> GetUserByIdAsync(string userId);
         Task<IEnumerable<ApplicationUser>> GetAllUsersAsync();
         Task<ApplicationUser?> CreateUserAsync(ApplicationUser user, string password);
-        Task<bool> UpdateUserAsync(ApplicationUser user);
+        Task<(bool Succeeded, string ErrorMessage)> UpdateUserAsync(ApplicationUser user);
         Task<bool> DeleteUserAsync(string userId);
         Task<IdentityResult?> RegisterUserAsync(ApplicationUser user, string password);
         Task<SignInResult> LoginUserAsync(string username, string password, bool rememberMe);
         Task<bool> LogoutUserAsync();
-        Task<bool> AssignRoleAsync(ApplicationUser user, string roleName);
+        Task<(bool Succeeded, string ErrorMessage)> AssignRoleAsync(ApplicationUser user, string roleName);
         Task<List<IdentityRole>> GetRolesAsync();
+        Task<string?> GetUserRoleAsync(ApplicationUser user);
+
     }
 }
