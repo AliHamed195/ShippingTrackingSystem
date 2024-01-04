@@ -4,6 +4,7 @@ namespace ShippingTrackingSystem.Services.Repository
 {
     public class FileService : IFileService
     {
+        /// <inheritdoc />
         public async Task<string?> AddFileAsync(IFormFile UploadedFile)
         {
             try
@@ -32,6 +33,7 @@ namespace ShippingTrackingSystem.Services.Repository
             }
         }
 
+        /// <inheritdoc />
         public bool DeleteFileAsync(string FilePath)
         {
             try
