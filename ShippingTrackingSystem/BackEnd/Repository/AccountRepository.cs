@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using ShippingTrackingSystem.BackEnd.Interfaces;
 using ShippingTrackingSystem.Models;
+using System.Security.Claims;
 
 namespace ShippingTrackingSystem.BackEnd.Repository
 {
@@ -10,12 +11,14 @@ namespace ShippingTrackingSystem.BackEnd.Repository
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AccountRepository(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<IdentityRole> roleManager)
+        public AccountRepository(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<IdentityRole> roleManager, IHttpContextAccessor httpContextAccessor)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<ApplicationUser?> CreateUserAsync(ApplicationUser user, string password)
@@ -60,7 +63,8 @@ namespace ShippingTrackingSystem.BackEnd.Repository
         {
             try
             {
-                return await Task.FromResult(_userManager.Users.ToList());
+                string currentUserId = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                return await Task.FromResult(_userManager.Users.Where(u => u.Id != currentUserId).ToList());
             }
             catch (Exception)
             {

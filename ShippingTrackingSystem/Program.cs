@@ -9,6 +9,9 @@ using ShippingTrackingSystem.Services.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// to get the current user.
+builder.Services.AddHttpContextAccessor();
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
