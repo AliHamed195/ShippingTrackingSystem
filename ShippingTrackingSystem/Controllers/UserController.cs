@@ -163,7 +163,7 @@ namespace ShippingTrackingSystem.Controllers
         {
             if (string.IsNullOrEmpty(id))
             {
-                return RedirectToAction(nameof(AllUsers));
+                return NotFound();
             }
 
             try
@@ -171,7 +171,8 @@ namespace ShippingTrackingSystem.Controllers
                 var user = await _accountRepository.GetUserByIdAsync(id);
                 if (user is null)
                 {
-                    return RedirectToAction(nameof(AllUsers));
+                    ModelState.AddModelError(string.Empty, "An error occurred while getting the user.");
+                    return View(new ApplicationUser());
                 }
 
                 return View(user);

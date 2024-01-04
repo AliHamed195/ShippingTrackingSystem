@@ -1,0 +1,45 @@
+﻿@model ShippingTrackingSystem.Models.ApplicationUser
+
+@{
+    ViewData["Title"] = "User Details";
+}
+
+<style>
+    .details-container {
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 0.25rem;
+        padding: 20px;
+        margin-top: 20px;
+    }
+
+    .details-header {
+        background-color: #007bff;
+        color: white;
+        padding: 10px;
+        border-radius: 0.25rem 0.25rem 0 0;
+        font-size: 1.5em;
+    }
+
+    .details-body {
+        padding: 15px;
+    }
+
+    .details-label {
+        font-weight: bold;
+    }
+</style>
+
+<div class="container">
+    <div class="details-container">
+        <div class="details-header">
+            User Details
+        </div>
+        <div class="details-body">
+            <p><span class="details-label">Username:</span> @Model.UserName</p>
+            <p><span class="details-label">Email:</span> @Model.Email</p>
+            <p><span class="details-label">Address:</span> @Model.Address</p>
+            <p><span class="details-label">Created On:</span> @Model.CreatedOn</p>
+        </div>
+    </div>
+</div>
