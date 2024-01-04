@@ -66,12 +66,12 @@ namespace ShippingTrackingSystem.Controllers
                 return View(category);
             }
 
-            // need to do swal ... // Error
+            ModelState.AddModelError("", errorMessage);
             return NotFound();
         }
 
         // POST: Category/Edit/5
-        [HttpPost]
+        [HttpPost("Edit/{id}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Category category)
         {
@@ -88,7 +88,7 @@ namespace ShippingTrackingSystem.Controllers
                     return RedirectToAction(nameof(AllCategories));
                 }
 
-                // need to do swal ... // Error
+                ModelState.AddModelError("", errorMessage);
             }
             return View(category);
         }

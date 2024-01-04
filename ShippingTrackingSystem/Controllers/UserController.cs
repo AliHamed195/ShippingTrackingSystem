@@ -85,7 +85,7 @@ namespace ShippingTrackingSystem.Controllers
             return View(user);
         }
 
-        // GET: User/Edit/{id}
+        // GET: User/Edit/5
         [HttpGet("Edit/{id}")]
         public async Task<IActionResult> EditUser(string id)
         {
@@ -106,7 +106,7 @@ namespace ShippingTrackingSystem.Controllers
             return View(user);
         }
 
-        // POST: User/Edit/{id}
+        // POST: User/Edit/5
         [HttpPost("Edit/{id}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditUser(string id, ApplicationUser user, string roleName)
@@ -163,7 +163,7 @@ namespace ShippingTrackingSystem.Controllers
             return View(user);
         }
 
-        // GET: User/Details/{id}
+        // GET: User/Details/5
         [HttpGet("Details/{id}")]
         public async Task<IActionResult> UserDetails(string id)
         {
@@ -190,7 +190,7 @@ namespace ShippingTrackingSystem.Controllers
             }
         }
 
-        // GET: User/Delete/{id}
+        // GET: User/Delete/5
         [HttpGet("Delete/{id}")]
         public async Task<IActionResult> DeleteUser(string id)
         {
