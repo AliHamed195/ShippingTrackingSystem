@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.ComponentModel.DataAnnotations;
 
 namespace ShippingTrackingSystem.Models
@@ -20,6 +21,6 @@ namespace ShippingTrackingSystem.Models
 
         public DateTime CreatedOn { get; set; } = DateTime.Now;
 
-        public virtual ICollection<Product> Products { get; set; }
+        public virtual ICollection<Product>? Products { get; set; }
     }
 }

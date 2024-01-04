@@ -37,7 +37,7 @@ namespace ShippingTrackingSystem.Controllers
         // POST: Category/Create
         [HttpPost("Create")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Description")] Category category)
+        public async Task<IActionResult> Create(Category category)
         {
             if (ModelState.IsValid)
             {
@@ -46,7 +46,7 @@ namespace ShippingTrackingSystem.Controllers
                 {
                     return RedirectToAction(nameof(AllCategories));
                 }
-                // need to do swal ... // Error
+                ModelState.AddModelError("", errorMessage);
             }
             return View(category);
         }
@@ -73,7 +73,7 @@ namespace ShippingTrackingSystem.Controllers
         // POST: Category/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description")] Category category)
+        public async Task<IActionResult> Edit(int id, Category category)
         {
             if (id != category.Id)
             {

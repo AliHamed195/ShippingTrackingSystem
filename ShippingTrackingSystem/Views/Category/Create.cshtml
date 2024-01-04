@@ -1,0 +1,57 @@
+﻿@model ShippingTrackingSystem.Models.Category
+
+@{
+    ViewData["Title"] = "Create Category";
+}
+
+<style>
+    .custom-form-container {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+        margin: auto;
+    }
+
+    .form-header {
+        font-size: 1.8rem;
+        margin-bottom: 15px;
+    }
+</style>
+
+<div class="custom-form-container mt-4">
+    <div class="form-header">Create New Category</div>
+    <form asp-action="Create" method="post">
+        <div asp-validation-summary="All" class="text-danger"></div>
+
+        <div class="mb-3">
+            <label asp-for="Name" class="form-label">Category Name</label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Description" class="form-label">Description</label>
+            <textarea asp-for="Description" class="form-control"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Create</button>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <text>
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please correct the errors and try again.'
+                });
+            </text>
+        }
+    </script>
+}
