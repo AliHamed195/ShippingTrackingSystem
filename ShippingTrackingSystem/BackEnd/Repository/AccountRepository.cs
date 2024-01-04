@@ -21,6 +21,7 @@ namespace ShippingTrackingSystem.BackEnd.Repository
             _httpContextAccessor = httpContextAccessor;
         }
 
+        /// <inheritdoc />
         public async Task<ApplicationUser?> CreateUserAsync(ApplicationUser user, string password)
         {
             try
@@ -40,6 +41,7 @@ namespace ShippingTrackingSystem.BackEnd.Repository
             }
         }
 
+        /// <inheritdoc />
         public async Task<bool> DeleteUserAsync(string userId)
         {
             try
@@ -59,6 +61,7 @@ namespace ShippingTrackingSystem.BackEnd.Repository
             }
         }
 
+        /// <inheritdoc />
         public async Task<IEnumerable<ApplicationUser>> GetAllUsersAsync()
         {
             try
@@ -72,6 +75,7 @@ namespace ShippingTrackingSystem.BackEnd.Repository
             }
         }
 
+        /// <inheritdoc />
         public async Task<ApplicationUser?> GetUserByIdAsync(string userId)
         {
             try
@@ -84,6 +88,7 @@ namespace ShippingTrackingSystem.BackEnd.Repository
             }
         }
 
+        /// <inheritdoc />
         public async Task<(bool Succeeded, string ErrorMessage)> UpdateUserAsync(ApplicationUser user)
         {
             try
@@ -102,6 +107,7 @@ namespace ShippingTrackingSystem.BackEnd.Repository
             }
         }
 
+        /// <inheritdoc />
         public async Task<IdentityResult?> RegisterUserAsync(ApplicationUser user, string password)
         {
             try
@@ -114,6 +120,7 @@ namespace ShippingTrackingSystem.BackEnd.Repository
             }
         }
 
+        /// <inheritdoc />
         public async Task<SignInResult> LoginUserAsync(string username, string password, bool rememberMe)
         {
             try
@@ -126,6 +133,7 @@ namespace ShippingTrackingSystem.BackEnd.Repository
             }
         }
 
+        /// <inheritdoc />
         public async Task<bool> LogoutUserAsync()
         {
             try
@@ -139,6 +147,7 @@ namespace ShippingTrackingSystem.BackEnd.Repository
             }
         }
 
+        /// <inheritdoc />
         public async Task<(bool Succeeded, string ErrorMessage)> AssignRoleAsync(ApplicationUser user, string roleName)
         {
             try
@@ -163,6 +172,7 @@ namespace ShippingTrackingSystem.BackEnd.Repository
             }
         }
 
+        /// <inheritdoc />
         public async Task<List<IdentityRole>> GetRolesAsync()
         {
             try
@@ -176,6 +186,7 @@ namespace ShippingTrackingSystem.BackEnd.Repository
             }
         }
 
+        /// <inheritdoc />
         public async Task<string?> GetUserRoleAsync(ApplicationUser user)
         {
             try
@@ -183,7 +194,7 @@ namespace ShippingTrackingSystem.BackEnd.Repository
                 var roles = await _userManager.GetRolesAsync(user);
                 return roles.FirstOrDefault();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }

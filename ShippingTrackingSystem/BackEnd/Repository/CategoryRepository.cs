@@ -14,6 +14,7 @@ namespace ShippingTrackingSystem.BackEnd.Repository
             _context = context;
         }
 
+        /// <inheritdoc />
         public async Task<(bool Succeeded, string ErrorMessage, Category Category)> CreateCategoryAsync(Category category)
         {
             try
@@ -28,6 +29,7 @@ namespace ShippingTrackingSystem.BackEnd.Repository
             }
         }
 
+        /// <inheritdoc />
         public async Task<(bool Succeeded, string ErrorMessage, IEnumerable<Category> Categories)> GetAllCategoriesAsync()
         {
             try
@@ -41,6 +43,7 @@ namespace ShippingTrackingSystem.BackEnd.Repository
             }
         }
 
+        /// <inheritdoc />
         public async Task<(bool Succeeded, string ErrorMessage, Category Category)> GetCategoryByIdAsync(int categoryId)
         {
             try
@@ -58,6 +61,7 @@ namespace ShippingTrackingSystem.BackEnd.Repository
             }
         }
 
+        /// <inheritdoc />
         public async Task<(bool Succeeded, string ErrorMessage)> UpdateCategoryAsync(Category category)
         {
             try
@@ -72,6 +76,7 @@ namespace ShippingTrackingSystem.BackEnd.Repository
             }
         }
 
+        /// <inheritdoc />
         public async Task<(bool Succeeded, string ErrorMessage)> DeleteCategoryAsync(int categoryId)
         {
             try

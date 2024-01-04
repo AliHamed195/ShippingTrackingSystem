@@ -15,6 +15,7 @@ namespace ShippingTrackingSystem.BackEnd.Repository
             _userManager = userManager;
         }
 
+        /// <inheritdoc />
         public async Task<int> GetUserCountAsync()
         {
             try
@@ -27,6 +28,7 @@ namespace ShippingTrackingSystem.BackEnd.Repository
             }
         }
 
+        /// <inheritdoc />
         public async Task<int> GetCustomerRoleUserCountAsync()
         {
             try
@@ -40,6 +42,7 @@ namespace ShippingTrackingSystem.BackEnd.Repository
             }
         }
 
+        /// <inheritdoc />
         public async Task<int> GetDeliveryRoleUserCountAsync()
         {
             try
@@ -53,6 +56,7 @@ namespace ShippingTrackingSystem.BackEnd.Repository
             }
         }
 
+        /// <inheritdoc />
         public async Task<int> GetWarehouseRoleUserCountAsync()
         {
             try
