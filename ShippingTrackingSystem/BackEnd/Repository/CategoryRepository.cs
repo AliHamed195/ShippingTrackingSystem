@@ -1,0 +1,95 @@
+﻿using Microsoft.EntityFrameworkCore;
+using ShippingTrackingSystem.BackEnd.Interfaces;
+using ShippingTrackingSystem.Models;
+using ShippingTrackingSystem.Models.Context;
+
+namespace ShippingTrackingSystem.BackEnd.Repository
+{
+    public class CategoryRepository : ICategoryRepository
+    {
+        private readonly MyDbContext _context;
+
+        public CategoryRepository(MyDbContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<(bool Succeeded, string ErrorMessage, Category Category)> CreateCategoryAsync(Category category)
+        {
+            try
+            {
+                _context.Categories.Add(category);
+                await _context.SaveChangesAsync();
+                return (true, null, category);
+            }
+            catch (Exception ex)
+            {
+                return (false, "There were an error while creating the new category", null);
+            }
+        }
+
+        public async Task<(bool Succeeded, string ErrorMessage, IEnumerable<Category> Categories)> GetAllCategoriesAsync()
+        {
+            try
+            {
+                var categories = await _context.Categories.ToListAsync();
+                return (true, null, categories);
+            }
+            catch (Exception ex)
+            {
+                return (false, "There were an error while getting all the categories", new List<Category>());
+            }
+        }
+
+        public async Task<(bool Succeeded, string ErrorMessage, Category Category)> GetCategoryByIdAsync(int categoryId)
+        {
+            try
+            {
+                var category = await _context.Categories.FindAsync(categoryId);
+                if (category != null)
+                {
+                    return (true, null, category);
+                }
+                return (false, "Category not found.", null);
+            }
+            catch (Exception ex)
+            {
+                return (false, "There were an error while getting the category", null);
+            }
+        }
+
+        public async Task<(bool Succeeded, string ErrorMessage)> UpdateCategoryAsync(Category category)
+        {
+            try
+            {
+                _context.Categories.Update(category);
+                await _context.SaveChangesAsync();
+                return (true, null);
+            }
+            catch (Exception ex)
+            {
+                return (false, "There were an error while updating the category");
+            }
+        }
+
+        public async Task<(bool Succeeded, string ErrorMessage)> DeleteCategoryAsync(int categoryId)
+        {
+            try
+            {
+                var category = await _context.Categories.FindAsync(categoryId);
+                if (category != null)
+                {
+                    category.IsDeleted = true;
+                    _context.Categories.Update(category);
+                    await _context.SaveChangesAsync();
+                    return (true, null);
+                }
+                return (false, "Category not found.");
+            }
+            catch (Exception ex)
+            {
+                return (false, ex.Message);
+            }
+        }
+    }
+}

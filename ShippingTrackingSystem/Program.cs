@@ -44,6 +44,7 @@ builder.Services.AddScoped<IFileService, FileService>();
 // Repositories
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<ISystemStatisticsRepository, SystemStatisticsRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
 var app = builder.Build();
 
