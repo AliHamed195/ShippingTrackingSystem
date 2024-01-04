@@ -56,56 +56,6 @@ namespace ShippingTrackingSystem.Controllers
             }
         }
 
-        [HttpGet("Add")]
-        public async Task<IActionResult> AddUser()
-        {
-            var roles = await _accountRepository.GetRolesAsync();
-            ViewBag.Roles = new SelectList(roles, "Name", "Name");
-
-            return View();
-        }
-
-        [HttpPost("Add")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddUser(ApplicationUser user, string password, string roleName)
-        {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    var result = await _accountRepository.RegisterUserAsync(user, password);
-                    if (result.Succeeded)
-                    {
-                        var roleAssignResult = await _accountRepository.AssignRoleAsync(user, roleName);
-                        if (roleAssignResult)
-                        {
-                            return RedirectToAction("UserList");
-                        }
-                        else
-                        {
-                            ModelState.AddModelError("", "Failed to assign the role.");
-                        }
-                    }
-                    else
-                    {
-                        foreach (var error in result.Errors)
-                        {
-                            ModelState.AddModelError(string.Empty, error.Description);
-                        }
-                    }
-                }
-                catch (Exception)
-                {
-                    ModelState.AddModelError(string.Empty, "An error occurred while creating the user.");
-                }
-            }
-
-            var roles = await _accountRepository.GetRolesAsync();
-            ViewBag.Roles = new SelectList(roles, "Name", "Name");
-            return View(user);
-        }
-
-
         [HttpGet("Register")]
         public IActionResult Register()
         {

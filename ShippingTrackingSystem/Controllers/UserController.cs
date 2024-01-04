@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using ShippingTrackingSystem.BackEnd.Interfaces;
 using ShippingTrackingSystem.Models;
 
@@ -32,27 +33,43 @@ namespace ShippingTrackingSystem.Controllers
         }
 
         [HttpGet("Create")]
-        public IActionResult CreateUser()
+        public async Task<IActionResult> CreateUser()
         {
+            var roles = await _accountRepository.GetRolesAsync();
+            ViewBag.Roles = new SelectList(roles, "Name", "Name");
+
             return View();
         }
 
         [HttpPost("Create")]
-        public async Task<IActionResult> CreateUser(ApplicationUser newUser)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateUser(ApplicationUser user, string roleName)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
                     string defaultPassword = _configuration["DefaultPassword"];
-                    var user = await _accountRepository.CreateUserAsync(newUser, defaultPassword);
-
-                    if (user is not null)
+                    var result = await _accountRepository.RegisterUserAsync(user, defaultPassword);
+                    if (result.Succeeded)
                     {
-                        return RedirectToAction(nameof(AllUsers));
+                        var roleAssignResult = await _accountRepository.AssignRoleAsync(user, roleName);
+                        if (roleAssignResult)
+                        {
+                            return RedirectToAction("UserList");
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("", "Failed to assign the role.");
+                        }
                     }
-
-                    ModelState.AddModelError(string.Empty, "An error occurred while creating the user.");
+                    else
+                    {
+                        foreach (var error in result.Errors)
+                        {
+                            ModelState.AddModelError(string.Empty, error.Description);
+                        }
+                    }
                 }
                 catch (Exception)
                 {
@@ -60,7 +77,9 @@ namespace ShippingTrackingSystem.Controllers
                 }
             }
 
-            return View(newUser);
+            var roles = await _accountRepository.GetRolesAsync();
+            ViewBag.Roles = new SelectList(roles, "Name", "Name");
+            return View(user);
         }
 
         [HttpGet("Edit/{id}")]
