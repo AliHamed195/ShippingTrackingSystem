@@ -1,0 +1,381 @@
+﻿@model IEnumerable<ShippingTrackingSystem.Models.Category>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UI Frameworks Page</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/sweetalert2/css/sweetalert2.min.css" />
+    <link rel="stylesheet" href="~/lib/fontawesome/css/fontawesome.min.css" />
+
+    <style>
+        .jumbotron-1, .jumbotron-2 {
+            background-size: cover;
+            width: 100%;
+            height: 70vh;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .jumbotron-1 {
+            background: url('/assets/laptop.jfif') no-repeat center center fixed;
+        }
+
+        .jumbotron-2 {
+            background: url('/assets/laptop.jfif') no-repeat center center fixed;
+        }
+
+        .card {
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .category-card {
+            margin-top: 2rem;
+            overflow: hidden;
+            transition: box-shadow 0.3s ease;
+            position: relative;
+            border: 1px solid black;
+        }
+
+        .category-card-button {
+            position: absolute;
+            bottom: -60px;
+            left: 0;
+            width: 100%;
+            background: #005cbf;
+            color: white;
+            transition: bottom 0.3s ease;
+            border: none;
+            padding: 10px 0;
+        }
+
+        .category-card:hover {
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+            .category-card:hover .category-card-button {
+                bottom: 0;
+            }
+
+
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .card-text {
+            margin-bottom: 2rem;
+        }
+
+        .btn-primary {
+            background-color: #005cbf;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .small-toggler .navbar-toggler-icon {
+            background-size: 0.75em 0.75em;
+        }
+
+
+        .navbar-nav .nav-item .nav-link:hover, .navbar-brand:hover {
+            color: #009BDF !important;
+            text-decoration: none;
+        }
+
+        .account-btns button:hover {
+            background-color: #005cbf;
+            color: #fff;
+        }
+
+        .account-btns button {
+            background: none;
+            border: 1px solid #005cbf;
+            padding: 0.375rem 0.75rem;
+            border-radius: 0.25rem;
+            color: #005cbf;
+            transition: color 0.2s, background-color 0.2s;
+        }
+
+        .container, .outer-container {
+            margin-bottom: 4rem;
+        }
+
+        .about {
+            padding: 2rem 5rem;
+            background-color: #f9f9f9;
+        }
+
+        .team-card {
+            margin-top: 2rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+            .team-card:hover {
+                transform: scale(1.05);
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            }
+
+            .team-card img {
+                width: 100%;
+                height: auto;
+                border-top-left-radius: calc(0.25rem - 1px);
+                border-top-right-radius: calc(0.25rem - 1px);
+            }
+
+        .team-card-body {
+            padding: 1.25rem;
+            text-align: center;
+        }
+
+        .team-card-title {
+            margin-top: 1rem;
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+
+
+        .footer {
+            background-color: #333;
+            color: #fff;
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+            .footer a {
+                color: #fff;
+                margin: 0 0.5rem;
+                text-decoration: none;
+                transition: color 0.3s;
+            }
+
+                .footer a:hover {
+                    color: #009BDF;
+                }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <!-- Toggler button for collapsed navbar content -->
+        <button class="navbar-toggler small-toggler" type="button" data-toggle="collapse" data-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+
+        <a class="navbar-brand" href="#">Ali Online</a>
+
+        <!-- Navbar content wrapped in a div with an id to be targeted by the toggler -->
+        <div class="collapse navbar-collapse" id="navbarContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#home-section">
+                        <i class="fa fa-house"></i>
+                        Home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#about-section">
+                        <i class="fa-regular fa-address-card"></i>
+                        About
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#contact-section">
+                        <i class="fa fa-address-book"></i>
+                        Contact
+                    </a>
+                </li>
+                @if (User.IsInRole("Admin"))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" asp-action="AdminPage" asp-controller="Home">
+                            <i class="fa fa-screwdriver-wrench"></i>
+                            Admin Page
+                        </a>
+                    </li>
+                }
+                @if (User.IsInRole("Customer"))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" asp-action="UserOrders" asp-controller="Orders">
+                            <i class="fa fa-cart-shopping"></i>
+                            My Orders
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
+
+        <div class="account-btns">
+            @if (!User.Identity.IsAuthenticated)
+            {
+                <a class="btn btn-outline-primary" asp-action="Register" asp-controller="Account">
+                    <i class="fa-regular fa-id-card"></i>
+                    Register
+                </a>
+                <a class="btn btn-outline-primary" asp-action="Login" asp-controller="Account">
+                    <i class="fa fa-arrow-right-to-bracket"></i>
+                    Login
+                </a>
+            }
+            else
+            {
+                <form asp-action="Logout" asp-controller="Account" method="post">
+                    <button type="submit" class="btn btn-outline-primary">
+                        <i class="fa fa-right-from-bracket"></i>
+                        Logout
+                    </button>
+                </form>
+            }
+        </div>
+    </nav>
+
+    <div id="home-section" class="outer-container">
+
+        <div class="jumbotron-1 jumbotron text-center">
+            <div>
+                <h1>Welcome To Our Online Store ... </h1>
+                <p>Hope you will enjoy shopping</p>
+            </div>
+        </div>
+
+        <div class="container">
+            <!-- ... Cards ... -->
+
+            <div class="row">
+                @if (Model.Any())
+                {
+                    @foreach (var item in Model)
+                    {
+                        <!-- card 1 -->
+                        <div class="col-md-4">
+                            <div class="card category-card">
+                                <img src="~/assets/R.jfif" alt="Category Image" class="card-img-top">
+                                <div class="card-body">
+                                    <h5 class="card-title">@item.Name</h5>
+                                    <p class="card-text">@item.Description</p>
+                                    <!-- The button is initially positioned off the bottom of the card -->
+                                    <a class="category-card-button" asp-route-id="@item.Id" asp-action="GetProductsForCategory" asp-controller="Product">Learn More</a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- card 1 -->
+                    }
+                }
+                else
+                {
+                    <h1>There are no Categories available yet ...</h1>
+                }
+            </div>
+
+            <!-- ... Cards ... -->
+        </div>
+
+        <div class="jumbotron-2 jumbotron text-center">
+            <div>
+                <h1>We are the best</h1>
+                <p>Join with us and get a lot of products</p>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="about-section" class="about text-center">
+        <h2>About Us</h2>
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        </p>
+    </div>
+
+    <div class="container">
+        <div class="row">
+
+            <!-- Team member card 1 -->
+            <div class="col-md-4">
+                <div class="card team-card">
+                    <img src="~/assets/R.jfif" alt="Owner 1" class="card-img-top">
+                    <div class="card-body team-card-body">
+                        <h5 class="card-title team-card-title">Owner 1</h5>
+                    </div>
+                </div>
+            </div>
+            <!-- Team member card 1 -->
+            <!-- Team member card 2 -->
+            <div class="col-md-4">
+                <div class="card team-card">
+                    <img src="~/assets/R.jfif" alt="Owner 2" class="card-img-top">
+                    <div class="card-body team-card-body">
+                        <h5 class="card-title team-card-title">Owner 2</h5>
+                    </div>
+                </div>
+            </div>
+            <!-- Team member card 2 -->
+            <!-- Team member card 3 -->
+            <div class="col-md-4">
+                <div class="card team-card">
+                    <img src="~/assets/R.jfif" alt="Owner 3" class="card-img-top">
+                    <div class="card-body team-card-body">
+                        <h5 class="card-title team-card-title">Owner 3</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Team member card 3 -->
+
+    </div>
+
+
+    <footer id="contact-section" class="footer">
+        <p>Connect with us:</p>
+        <a href="#">Facebook</a> |
+        <a href="#">Instagram</a> |
+        <a href="#">TikTok</a>
+        <div class="contact-info">
+            <p>Email: contact@example.com</p>
+            <p>Phone: (123) 456-7890</p>
+            <!-- Placeholder for the logo image -->
+            <img src="~/assets/MyLogo.jfif" alt="Company Logo" style="max-width: 100px;">
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/sweetalert2/js/sweetalert2.min.js"></script>
+    <script src="~/lib/fontawesome/js/fontawesome.min.js"></script>
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <text>
+            Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Please correct the errors and try again.'
+            });
+        </text>
+    }
+</body>
+</html>
