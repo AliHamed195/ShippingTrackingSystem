@@ -23,7 +23,8 @@ namespace ShippingTrackingSystem.Controllers
             {
                 return View(categories);
             }
-            // need to do swal ... // Error
+
+            ModelState.AddModelError("", errorMessage);
             return View(Enumerable.Empty<Category>());
         }
 
@@ -93,25 +94,6 @@ namespace ShippingTrackingSystem.Controllers
             return View(category);
         }
 
-        // GET: Category/Delete/5
-        [HttpGet("Delete/{id}")]
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id is null)
-            {
-                return NotFound();
-            }
-
-            var (success, errorMessage, category) = await _categoryRepository.GetCategoryByIdAsync(id.Value);
-            if (success)
-            {
-                return View(category);
-            }
-
-            // need to do swal ... // Error
-            return NotFound();
-        }
-
         // POST: Category/Delete/5
         [HttpPost("Delete/{id}")]
         [ValidateAntiForgeryToken]
@@ -123,7 +105,7 @@ namespace ShippingTrackingSystem.Controllers
                 return RedirectToAction(nameof(AllCategories));
             }
 
-            // need to do swal ... // Error
+            ModelState.AddModelError("", errorMessage);
             return View();
         }
     }
