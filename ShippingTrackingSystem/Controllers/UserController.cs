@@ -17,6 +17,7 @@ namespace ShippingTrackingSystem.Controllers
             _configuration = configuration;
         }
 
+        // GET: User/All
         [HttpGet("All")]
         public async Task<IActionResult> AllUsers()
         {
@@ -32,6 +33,7 @@ namespace ShippingTrackingSystem.Controllers
             }
         }
 
+        // GET: User/Create
         [HttpGet("Create")]
         public async Task<IActionResult> CreateUser()
         {
@@ -41,6 +43,7 @@ namespace ShippingTrackingSystem.Controllers
             return View();
         }
 
+        // POST: User/Create
         [HttpPost("Create")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateUser(ApplicationUser user, string roleName)
@@ -82,6 +85,7 @@ namespace ShippingTrackingSystem.Controllers
             return View(user);
         }
 
+        // GET: User/Edit/{id}
         [HttpGet("Edit/{id}")]
         public async Task<IActionResult> EditUser(string id)
         {
@@ -102,6 +106,7 @@ namespace ShippingTrackingSystem.Controllers
             return View(user);
         }
 
+        // POST: User/Edit/{id}
         [HttpPost("Edit/{id}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditUser(string id, ApplicationUser user, string roleName)
@@ -158,6 +163,7 @@ namespace ShippingTrackingSystem.Controllers
             return View(user);
         }
 
+        // GET: User/Details/{id}
         [HttpGet("Details/{id}")]
         public async Task<IActionResult> UserDetails(string id)
         {
@@ -184,7 +190,7 @@ namespace ShippingTrackingSystem.Controllers
             }
         }
 
-
+        // GET: User/Delete/{id}
         [HttpGet("Delete/{id}")]
         public async Task<IActionResult> DeleteUser(string id)
         {

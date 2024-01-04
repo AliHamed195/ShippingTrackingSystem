@@ -18,6 +18,7 @@ namespace ShippingTrackingSystem.Controllers
             _accountRepository = accountRepository;
         }
 
+        // GET: Account/Login
         [HttpGet("Login")]
         [AllowAnonymous]
         public IActionResult Login()
@@ -25,6 +26,7 @@ namespace ShippingTrackingSystem.Controllers
             return View();
         }
 
+        // POST: Account/Login
         [HttpPost("Login")]
         [ValidateAntiForgeryToken]
         [AllowAnonymous]
@@ -56,12 +58,14 @@ namespace ShippingTrackingSystem.Controllers
             }
         }
 
+        // GET: Account/Register
         [HttpGet("Register")]
         public IActionResult Register()
         {
             return View();
         }
 
+        // POST: Account/Register
         [HttpPost("Register")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(ApplicationUser user, string password)
@@ -101,6 +105,7 @@ namespace ShippingTrackingSystem.Controllers
             return View(user);
         }
 
+        // POST: Account/Logout
         [HttpPost]
         public async Task<IActionResult> Logout()
         {
