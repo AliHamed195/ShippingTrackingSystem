@@ -43,6 +43,7 @@ builder.Services.AddScoped<IFileService, FileService>();
 
 // Repositories
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+builder.Services.AddScoped<ISystemStatisticsRepository, SystemStatisticsRepository>();
 
 var app = builder.Build();
 

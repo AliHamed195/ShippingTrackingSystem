@@ -1,5 +1,74 @@
 ﻿@model IEnumerable<ShippingTrackingSystem.Models.ApplicationUser>
 
+<style>
+    .card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 1.5rem;
+    }
+
+    .card {
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+    .card-text {
+        font-size: 2rem;
+    }
+
+    .display-4 {
+        font-weight: bold;
+    }
+</style>
+
+<div class="row mt-4">
+    <div class="col-md-3">
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-header">
+                <i class="fas fa-users fa-2x"></i> Total Users
+            </div>
+            <div class="card-body">
+                <p class="card-text display-4" id="totalUsersCount">0</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-header">
+                <i class="fas fa-user-tag fa-2x"></i> Customers
+            </div>
+            <div class="card-body">
+                <p class="card-text display-4" id="customerCount">0</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-info mb-3">
+            <div class="card-header">
+                <i class="fas fa-shipping-fast fa-2x"></i> Delivery Emp 
+            </div>
+            <div class="card-body">
+                <p class="card-text display-4" id="deliveryCount">0</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-warning mb-3">
+            <div class="card-header">
+                <i class="fas fa-warehouse fa-2x"></i> Warehouse Emp
+            </div>
+            <div class="card-body">
+                <p class="card-text display-4" id="warehouseCount">0</p>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="row mt-3 mb-4">
     <div class="col-md-2">
         <a class="btn btn-outline-primary" href="/User/Create">Create New</a>
@@ -43,8 +112,32 @@
 
     <script>
         $(document).ready(function () {
-            var table = $('.table').DataTable(); 
+            var table = $('.table').DataTable();
         });
+
+        const apiEndpoints = {
+            totalUsers: '/api/statistics/Totalusers',
+            customers: '/api/statistics/CustomerRoleCount',
+            delivery: '/api/statistics/DeliveryRoleCount',
+            warehouse: '/api/statistics/WarehouseRoleCount'
+        };
+
+        function fetchCounts() {
+            const fetchPromises = Object.keys(apiEndpoints).map(key =>
+                fetch(apiEndpoints[key]).then(response => response.json())
+            );
+
+            Promise.all(fetchPromises).then(results => {
+                document.getElementById('totalUsersCount').textContent = results[0].count;
+                document.getElementById('customerCount').textContent = results[1].count;
+                document.getElementById('deliveryCount').textContent = results[2].count;
+                document.getElementById('warehouseCount').textContent = results[3].count;
+            }).catch(error => {
+                console.error('Error fetching counts:', error);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchCounts);
 
         function deleteUser(id) {
             Swal.fire({
@@ -61,7 +154,7 @@
                         type: 'GET',
                         success: function (response) {
                             if (response.success) {
-                                var table = $('.table').DataTable(); 
+                                var table = $('.table').DataTable();
                                 table.row($('#user-' + id)).remove().draw();
 
                                 Swal.fire(
