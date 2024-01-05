@@ -20,6 +20,10 @@
         margin-bottom: 15px;
         text-align: center;
     }
+
+    .required {
+        color: red;
+    }
 </style>
 
 <div class="create-product-form">
@@ -29,12 +33,12 @@
 
         <div class="row">
             <div class="col-md-6 form-group mb-3">
-                <label asp-for="Name" class="control-label"></label>
+                <label asp-for="Name" class="control-label">Name<span class="required">*</span></label>
                 <input asp-for="Name" class="form-control" placeholder="Product Name" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="col-md-6 form-group mb-3">
-                <label asp-for="Price" class="control-label"></label>
+                <label asp-for="Price" class="control-label">Price<span class="required">*</span></label>
                 <input asp-for="Price" class="form-control" placeholder="Price" />
                 <span asp-validation-for="Price" class="text-danger"></span>
             </div>
@@ -42,19 +46,19 @@
 
         <div class="row">
             <div class="col-md-6 form-group mb-3">
-                <label asp-for="StockQuantity" class="control-label"></label>
+                <label asp-for="StockQuantity" class="control-label">Stock Quantity<span class="required">*</span></label>
                 <input asp-for="StockQuantity" class="form-control" placeholder="Stock Quantity" />
                 <span asp-validation-for="StockQuantity" class="text-danger"></span>
             </div>
             <div class="col-md-6 form-group mb-3">
-                <label asp-for="CategoryId" class="control-label">Category</label>
+                <label asp-for="CategoryId" class="control-label">Category<span class="required">*</span></label>
                 <select asp-for="CategoryId" asp-items="categoryList" class="form-control select2"></select>
                 <span asp-validation-for="CategoryId" class="text-danger"></span>
             </div>
         </div>
 
         <div class="form-group mb-3">
-            <label asp-for="Description" class="control-label"></label>
+            <label asp-for="Description" class="control-label">Description<span class="required">*</span></label>
             <textarea asp-for="Description" class="form-control" placeholder="Description"></textarea>
             <span asp-validation-for="Description" class="text-danger"></span>
         </div>

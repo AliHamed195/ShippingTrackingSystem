@@ -41,6 +41,10 @@
             background: linear-gradient(135deg, #005cbf, #004085);
             box-shadow: 0 0 10px rgba(0, 92, 191, 0.5);
         }
+
+    .required {
+        color: red;
+    }
 </style>
 
 <div class="row justify-content-center">
@@ -56,14 +60,14 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label asp-for="UserName" class="control-label">Username</label>
+                                <label asp-for="UserName" class="control-label">Username<span class="required">*</span></label>
                                 <input asp-for="UserName" class="form-control" />
                                 <span asp-validation-for="UserName" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label asp-for="Email" class="control-label">Email</label>
+                                <label asp-for="Email" class="control-label">Email<span class="required">*</span></label>
                                 <input asp-for="Email" class="form-control" />
                                 <span asp-validation-for="Email" class="text-danger"></span>
                             </div>
@@ -73,13 +77,13 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="control-label">Password</label>
+                                <label class="control-label">Password<span class="required">*</span></label>
                                 <input name="password" type="password" class="form-control" />
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label asp-for="Address" class="control-label">Address</label>
+                                <label asp-for="Address" class="control-label">Address<span class="required">*</span></label>
                                 <input asp-for="Address" class="form-control" />
                                 <span asp-validation-for="Address" class="text-danger"></span>
                             </div>

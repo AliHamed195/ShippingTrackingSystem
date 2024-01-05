@@ -19,5 +19,7 @@ namespace ShippingTrackingSystem.Models
         public DateTime? EstimatedDeliveryDate { get; set; } = DateTime.Now.AddDays(3);
 
         public virtual ICollection<OrderDetail> OrdersDetails { get; set; }
+
+        public virtual ICollection<OrderHistory>? OrderHistories { get; set; }
     }
 }

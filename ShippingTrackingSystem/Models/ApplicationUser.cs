@@ -11,5 +11,6 @@ namespace ShippingTrackingSystem.Models
         public DateTime CreatedOn { get; set; } = DateTime.Now;
 
         public virtual ICollection<Notification>? Notifications { get; set; }
+        public virtual ICollection<OrderHistory>? OrderHistories { get; set; }
     }
 }

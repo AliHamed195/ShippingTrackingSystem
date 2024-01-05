@@ -18,6 +18,10 @@
         font-size: 1.8rem;
         margin-bottom: 15px;
     }
+
+    .required {
+        color: red;
+    }
 </style>
 
 <div class="custom-form-container mt-4">
@@ -26,13 +30,13 @@
         <div asp-validation-summary="All" class="text-danger"></div>
 
         <div class="mb-3">
-            <label asp-for="Name" class="form-label">Category Name</label>
+            <label asp-for="Name" class="form-label">Category Name<span class="required">*</span></label>
             <input asp-for="Name" class="form-control" />
             <span asp-validation-for="Name" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <label asp-for="Description" class="form-label">Description</label>
+            <label asp-for="Description" class="form-label">Description<span class="required">*</span></label>
             <textarea asp-for="Description" class="form-control"></textarea>
             <span asp-validation-for="Description" class="text-danger"></span>
         </div>
