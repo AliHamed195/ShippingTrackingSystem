@@ -16,7 +16,7 @@ namespace ShippingTrackingSystem.Models
         [Required]
         public DateTime StatusChangedOn { get; set; } = DateTime.Now;
 
-        public int EditorUserId { get; set; }
+        public string EditorUserId { get; set; }
         public ApplicationUser EditorUser { get; set; }
 
         public string? Notes { get; set; }

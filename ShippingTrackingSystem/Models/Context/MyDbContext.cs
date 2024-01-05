@@ -15,5 +15,6 @@ namespace ShippingTrackingSystem.Models.Context
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<Notification> Notifications { get; set; }
+        public DbSet<OrderHistory> OrderHistory { get; set; }
     }
 }
