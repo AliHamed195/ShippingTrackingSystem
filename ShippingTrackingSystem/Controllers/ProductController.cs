@@ -25,6 +25,9 @@ namespace ShippingTrackingSystem.Controllers
             var (success, errorMessage, products) = await _productRepository.GetAllProductsAsync();
             if (success)
             {
+                var availableCount = products.Count(p => p.StockQuantity > 0);
+                ViewBag.AvailableCount = availableCount;
+
                 return View(products);
             }
 
@@ -104,7 +107,6 @@ namespace ShippingTrackingSystem.Controllers
 
         // POST: Product/Delete/5
         [HttpPost("Delete/{id}")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
             try
