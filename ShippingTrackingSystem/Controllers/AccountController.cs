@@ -40,7 +40,7 @@ namespace ShippingTrackingSystem.Controllers
 
             try
             {
-                var result = await _accountRepository.LoginUserAsync(email, password, false);
+                var result = await _accountRepository.LoginUserAsync(username: email, password: password, rememberMe: false);
                 if (result.Succeeded)
                 {
                     return RedirectToAction("Index", "Home");
@@ -75,10 +75,10 @@ namespace ShippingTrackingSystem.Controllers
                 try
                 {
                     string roleName = UserRole.Customer.ToString();
-                    var result = await _accountRepository.RegisterUserAsync(user, password);
+                    var result = await _accountRepository.RegisterUserAsync(user: user, password: password);
                     if (result.Succeeded)
                     {
-                        var (updateRoleSucceeded, updateRoleErrorMessage) = await _accountRepository.AssignRoleAsync(user, roleName);
+                        var (updateRoleSucceeded, updateRoleErrorMessage) = await _accountRepository.AssignRoleAsync(user: user, roleName: roleName);
                         if (updateRoleSucceeded)
                         {
                             return RedirectToAction("UserList");

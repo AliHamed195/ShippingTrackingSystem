@@ -26,7 +26,7 @@ namespace ShippingTrackingSystem.Controllers
                 return View(categories);
             }
 
-            ModelState.AddModelError("", errorMessage);
+            ModelState.AddModelError("", errorMessage: errorMessage);
             return View(Enumerable.Empty<Category>());
         }
 
@@ -44,12 +44,12 @@ namespace ShippingTrackingSystem.Controllers
         {
             if (ModelState.IsValid)
             {
-                var (success, errorMessage, createdCategory) = await _categoryRepository.CreateCategoryAsync(category);
+                var (success, errorMessage, createdCategory) = await _categoryRepository.CreateCategoryAsync(category: category);
                 if (success)
                 {
                     return RedirectToAction(nameof(AllCategories));
                 }
-                ModelState.AddModelError("", errorMessage);
+                ModelState.AddModelError("", errorMessage: errorMessage);
             }
             return View(category);
         }
@@ -63,13 +63,13 @@ namespace ShippingTrackingSystem.Controllers
                 return NotFound();
             }
 
-            var (success, errorMessage, category) = await _categoryRepository.GetCategoryByIdAsync(id.Value);
+            var (success, errorMessage, category) = await _categoryRepository.GetCategoryByIdAsync(categoryId: id.Value);
             if (success)
             {
                 return View(category);
             }
 
-            ModelState.AddModelError("", errorMessage);
+            ModelState.AddModelError("", errorMessage: errorMessage);
             return NotFound();
         }
 
@@ -85,13 +85,13 @@ namespace ShippingTrackingSystem.Controllers
 
             if (ModelState.IsValid)
             {
-                var (success, errorMessage) = await _categoryRepository.UpdateCategoryAsync(category);
+                var (success, errorMessage) = await _categoryRepository.UpdateCategoryAsync(category: category);
                 if (success)
                 {
                     return RedirectToAction(nameof(AllCategories));
                 }
 
-                ModelState.AddModelError("", errorMessage);
+                ModelState.AddModelError("", errorMessage: errorMessage);
             }
             return View(category);
         }

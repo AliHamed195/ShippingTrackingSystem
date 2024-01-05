@@ -30,12 +30,8 @@ namespace ShippingTrackingSystem.Controllers
             return View(Enumerable.Empty<Category>());
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
-
-        public IActionResult Privacy()
+        [AllowAnonymous]
+        public IActionResult AdminPage()
         {
             return View();
         }

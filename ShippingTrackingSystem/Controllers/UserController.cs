@@ -53,10 +53,10 @@ namespace ShippingTrackingSystem.Controllers
                 try
                 {
                     string defaultPassword = _configuration["DefaultPassword"];
-                    var result = await _accountRepository.RegisterUserAsync(user, defaultPassword);
+                    var result = await _accountRepository.RegisterUserAsync(user: user, password: defaultPassword);
                     if (result.Succeeded)
                     {
-                        var (updateRoleSucceeded, updateRoleErrorMessage) = await _accountRepository.AssignRoleAsync(user, roleName);
+                        var (updateRoleSucceeded, updateRoleErrorMessage) = await _accountRepository.AssignRoleAsync(user: user, roleName: roleName);
                         if (updateRoleSucceeded)
                         {
                             return RedirectToAction(nameof(AllUsers));
@@ -101,7 +101,7 @@ namespace ShippingTrackingSystem.Controllers
             }
 
             var roles = await _accountRepository.GetRolesAsync();
-            ViewBag.Roles = new SelectList(roles, "Name", "Name", await _accountRepository.GetUserRoleAsync(user));
+            ViewBag.Roles = new SelectList(roles, "Name", "Name", await _accountRepository.GetUserRoleAsync(user: user));
 
             return View(user);
         }
@@ -128,10 +128,10 @@ namespace ShippingTrackingSystem.Controllers
                     var (updateUserSucceeded, updateUserErrorMessage) = await _accountRepository.UpdateUserAsync(oldUser);
                     if (updateUserSucceeded)
                     {
-                        var userOldRole = await _accountRepository.GetUserRoleAsync(user);
+                        var userOldRole = await _accountRepository.GetUserRoleAsync(user: user);
                         if (userOldRole != null && userOldRole != roleName)
                         {
-                            var (updateRoleSucceeded, updateRoleErrorMessage) = await _accountRepository.AssignRoleAsync(oldUser, roleName);
+                            var (updateRoleSucceeded, updateRoleErrorMessage) = await _accountRepository.AssignRoleAsync(user: oldUser, roleName: roleName);
                             if (updateRoleSucceeded)
                             {
                                 return RedirectToAction(nameof(AllUsers));
@@ -158,7 +158,7 @@ namespace ShippingTrackingSystem.Controllers
             }
 
             var roles = await _accountRepository.GetRolesAsync();
-            ViewBag.Roles = new SelectList(roles, "Name", "Name", await _accountRepository.GetUserRoleAsync(user));
+            ViewBag.Roles = new SelectList(roles, "Name", "Name", await _accountRepository.GetUserRoleAsync(user: user));
 
             return View(user);
         }
