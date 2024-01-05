@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ShippingTrackingSystem.Models
 {
@@ -20,6 +21,9 @@ namespace ShippingTrackingSystem.Models
         public bool IsDeleted { get; set; } = false;
 
         public DateTime CreatedOn { get; set; } = DateTime.Now;
+
+        [NotMapped]
+        public bool IsContainsProducts { get; set; }
 
         public virtual ICollection<Product>? Products { get; set; }
     }

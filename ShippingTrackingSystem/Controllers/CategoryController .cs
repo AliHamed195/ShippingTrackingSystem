@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using ShippingTrackingSystem.BackEnd.Interfaces;
+using ShippingTrackingSystem.BackEnd.Repository;
 using ShippingTrackingSystem.Models;
 
 namespace ShippingTrackingSystem.Controllers
@@ -96,17 +98,24 @@ namespace ShippingTrackingSystem.Controllers
 
         // POST: Category/Delete/5
         [HttpPost("Delete/{id}")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            var (success, errorMessage) = await _categoryRepository.DeleteCategoryAsync(id);
-            if (success)
+            try
             {
-                return RedirectToAction(nameof(AllCategories));
+                var (success, errorMessage) = await _categoryRepository.DeleteCategoryAsync(id);
+                if (success)
+                {
+                    return Json(new { success = true, message = "Category successfully deleted." });
+                }
+                else
+                {
+                    return Json(new { success = false, message = errorMessage });
+                }
             }
-
-            ModelState.AddModelError("", errorMessage);
-            return View();
+            catch (Exception)
+            {
+                return Json(new { success = false, message = "An error occurred while deleting the Category." });
+            }
         }
     }
 }

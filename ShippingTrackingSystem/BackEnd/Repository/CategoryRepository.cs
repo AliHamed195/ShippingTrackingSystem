@@ -34,7 +34,11 @@ namespace ShippingTrackingSystem.BackEnd.Repository
         {
             try
             {
-                var categories = await _context.Categories.ToListAsync();
+                var categories = await _context.Categories.Where(c => c.IsDeleted == false).Include(c => c.Products).ToListAsync();
+                foreach (var category in categories)
+                {
+                    category.IsContainsProducts = category.Products?.Any() ?? false;
+                }
                 return (true, null, categories);
             }
             catch (Exception ex)
