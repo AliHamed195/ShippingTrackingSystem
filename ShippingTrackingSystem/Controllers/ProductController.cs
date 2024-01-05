@@ -66,6 +66,9 @@ namespace ShippingTrackingSystem.Controllers
         [HttpGet("Edit/{id}")]
         public async Task<IActionResult> Edit(int id)
         {
+            var (categorySuccess, categoryErrorMessage, categories) = await _categoryRepository.GetAllCategoriesAsync();
+            ViewBag.Categories = new SelectList(categories, "Id", "Name");
+
             var (success, errorMessage, product) = await _productRepository.GetProductByIdAsync(id);
             if (success && product != null)
             {
@@ -83,6 +86,7 @@ namespace ShippingTrackingSystem.Controllers
         {
             if (ModelState.IsValid)
             {
+                product.Id = id;
                 var (success, errorMessage) = await _productRepository.UpdateProductAsync(product);
                 if (success)
                 {
@@ -91,6 +95,9 @@ namespace ShippingTrackingSystem.Controllers
 
                 ModelState.AddModelError("", errorMessage);
             }
+
+            var (categorySuccess, categoryErrorMessage, categories) = await _categoryRepository.GetAllCategoriesAsync();
+            ViewBag.Categories = new SelectList(categories, "Id", "Name");
 
             return View(product);
         }
