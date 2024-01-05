@@ -117,5 +117,22 @@ namespace ShippingTrackingSystem.Controllers
                 return Json(new { success = false, message = "An error occurred while deleting the Category." });
             }
         }
+
+        // GET: Category/Products/5
+        [HttpGet("Products/{id}")]
+        public async Task<IActionResult> CategoryProducts(int id)
+        {
+            var (success, errorMessage, products) = await _categoryRepository.GetProductsByCategoryIdAsync(categoryId: id);
+            if (success)
+            {
+                var(categorySuccess, categoryErrorMessage, category) = await _categoryRepository.GetCategoryByIdAsync(categoryId: id);
+                ViewBag.CategoryName = category.Name;
+                return View(products);
+            }
+
+            ModelState.AddModelError("", errorMessage);
+            return View(Enumerable.Empty<Product>());
+        }
+
     }
 }

@@ -19,7 +19,7 @@ namespace ShippingTrackingSystem.BackEnd.Repository
         {
             try
             {
-                var temp = _context.Categories.Where(c => c.Name == category.Name && c.IsDeleted == false).FirstOrDefault(); 
+                var temp = _context.Categories.Where(c => c.Name == category.Name && !c.IsDeleted).FirstOrDefault(); 
                 if (temp is not null)
                 {
                     return (false, "The name is exist.", null);
@@ -39,7 +39,7 @@ namespace ShippingTrackingSystem.BackEnd.Repository
         {
             try
             {
-                var categories = await _context.Categories.Where(c => c.IsDeleted == false).Include(c => c.Products).ToListAsync();
+                var categories = await _context.Categories.Where(c => !c.IsDeleted).Include(c => c.Products).ToListAsync();
                 foreach (var category in categories)
                 {
                     category.IsContainsProducts = category.Products?.Any() ?? false;
@@ -75,7 +75,7 @@ namespace ShippingTrackingSystem.BackEnd.Repository
         {
             try
             {
-                var temp = _context.Categories.Where(c => c.Name == category.Name && c.IsDeleted == false && c.Id != category.Id).FirstOrDefault();
+                var temp = _context.Categories.Where(c => c.Name == category.Name && !c.IsDeleted && c.Id != category.Id).FirstOrDefault();
                 if (temp is not null)
                 {
                     return (false, "The name is exist.");
@@ -108,6 +108,29 @@ namespace ShippingTrackingSystem.BackEnd.Repository
             catch (Exception ex)
             {
                 return (false, ex.Message);
+            }
+        }
+
+        /// <inheritdoc />
+        public async Task<(bool Succeeded, string ErrorMessage, IEnumerable<Product> Products)> GetProductsByCategoryIdAsync(int categoryId)
+        {
+            try
+            {
+                var categoryExists = await _context.Categories.AnyAsync(c => c.Id == categoryId);
+                if (!categoryExists)
+                {
+                    return (false, "Category not found.", Enumerable.Empty<Product>());
+                }
+
+                var products = await _context.Products
+                    .Where(p => p.CategoryId == categoryId && !p.IsDeleted)
+                    .ToListAsync();
+
+                return (true, null, products);
+            }
+            catch (Exception ex)
+            {
+                return (false, ex.Message, Enumerable.Empty<Product>());
             }
         }
     }

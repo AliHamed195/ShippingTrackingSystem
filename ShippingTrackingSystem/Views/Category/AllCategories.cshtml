@@ -88,6 +88,7 @@
                 <td>@(category.IsContainsProducts ? "Yes" : "No")</td>
                 <td>
                     <a class="btn btn-secondary btn-sm" href="/Category/Edit/@category.Id">Edit</a>
+                    <a class="btn btn-success btn-sm" href="/Category/Products/@category.Id">Products</a>
                     <button class="btn btn-danger btn-sm" onclick="deleteCategory('@category.Id')">Delete</button>
                 </td>
             </tr>

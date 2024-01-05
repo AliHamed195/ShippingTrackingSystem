@@ -40,5 +40,12 @@ namespace ShippingTrackingSystem.BackEnd.Interfaces
         /// <param name="categoryId">The unique identifier for the category to delete.</param>
         /// <returns>A tuple indicating success or failure, along with an error message if applicable.</returns>
         Task<(bool Succeeded, string ErrorMessage)> DeleteCategoryAsync(int categoryId);
+
+        /// <summary>
+        /// Retrieves all products for a specific category.
+        /// </summary>
+        /// <param name="categoryId">The unique identifier for the category.</param>
+        /// <returns>A tuple containing a success flag, error message if any, and a list of products.</returns>
+        Task<(bool Succeeded, string ErrorMessage, IEnumerable<Product> Products)> GetProductsByCategoryIdAsync(int categoryId);
     }
 }
