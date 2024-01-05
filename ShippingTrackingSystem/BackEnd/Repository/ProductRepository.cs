@@ -22,7 +22,7 @@ namespace ShippingTrackingSystem.BackEnd.Repository
             try
             {
                 var temp = _context.Products.Where(p => p.Name == product.Name && p.IsDeleted == false && p.CategoryId == product.CategoryId).FirstOrDefault();
-                if (temp is null)
+                if (temp is not null)
                 {
                     return (false, "The name is exist.", null);
                 }
@@ -30,6 +30,10 @@ namespace ShippingTrackingSystem.BackEnd.Repository
                 if (product.ImageFile != null)
                 {
                     product.ImagePath = await _fileService.AddFileAsync(product.ImageFile);
+                }
+                else
+                {
+                    return (false, "Image is required.", null);
                 }
 
                 _context.Products.Add(product);
@@ -77,7 +81,7 @@ namespace ShippingTrackingSystem.BackEnd.Repository
             try
             {
                 var temp = _context.Products.Where(p => p.Name == product.Name && p.IsDeleted == false && p.CategoryId == product.CategoryId).FirstOrDefault();
-                if (temp is null)
+                if (temp is not null)
                 {
                     return (false, "The name is exist.");
                 }
@@ -89,6 +93,10 @@ namespace ShippingTrackingSystem.BackEnd.Repository
                         _fileService.DeleteFileAsync(product.ImagePath);
                     }
                     product.ImagePath = await _fileService.AddFileAsync(product.ImageFile);
+                }
+                else
+                {
+                    return (false, "Image is required.");
                 }
 
                 _context.Products.Update(product);

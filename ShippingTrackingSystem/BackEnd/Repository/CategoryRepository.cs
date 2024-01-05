@@ -20,7 +20,7 @@ namespace ShippingTrackingSystem.BackEnd.Repository
             try
             {
                 var temp = _context.Categories.Where(c => c.Name == category.Name && c.IsDeleted == false).FirstOrDefault(); 
-                if (temp is null)
+                if (temp is not null)
                 {
                     return (false, "The name is exist.", null);
                 }
@@ -76,7 +76,7 @@ namespace ShippingTrackingSystem.BackEnd.Repository
             try
             {
                 var temp = _context.Categories.Where(c => c.Name == category.Name && c.IsDeleted == false && c.Id != category.Id).FirstOrDefault();
-                if (temp is null)
+                if (temp is not null)
                 {
                     return (false, "The name is exist.");
                 }

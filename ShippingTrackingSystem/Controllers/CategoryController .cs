@@ -16,7 +16,7 @@ namespace ShippingTrackingSystem.Controllers
             _categoryRepository = categoryRepository;
         }
 
-        // GET: Categories
+        // GET: Categories/All
         [HttpGet("All")]
         public async Task<IActionResult> AllCategories()
         {

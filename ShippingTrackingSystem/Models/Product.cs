@@ -23,9 +23,8 @@ namespace ShippingTrackingSystem.Models
         [Display(Name = "Stock Quantity")]
         public int StockQuantity { get; set; }
 
-        [Required(ErrorMessage = "Product Image is required.")]
         [Display(Name = "Product Image")]
-        public string ImagePath { get; set; }
+        public string? ImagePath { get; set; }
 
         [NotMapped]
         public IFormFile? ImageFile { get; set; }
