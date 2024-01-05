@@ -1,0 +1,38 @@
+﻿@model ShippingTrackingSystem.ViewModels.BuyProductsViewModel
+
+@{
+    ViewData["Title"] = "Buy Products";
+}
+
+<h2>Buy Products from Category @Model.CategoryName</h2>
+
+<form asp-action="PlaceOrder" asp-controller="Order">
+    <input type="hidden" asp-for="CategoryId" />
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Available</th>
+                <th>Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in Model.Products)
+            {
+                <tr>
+                    <td>@product.ProductName</td>
+                    <td>@product.Price</td>
+                    <td>@product.AvailableQuantity</td>
+                    <td>
+                        <input type="hidden" name="Products[@product.ProductId].ProductId" value="@product.ProductId" />
+                        <input type="number" name="Products[@product.ProductId].PurchaseQuantity" min="0" max="@product.AvailableQuantity" />
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <button type="submit" class="btn btn-primary">Place Order</button>
+</form>

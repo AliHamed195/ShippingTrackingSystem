@@ -47,5 +47,23 @@ namespace ShippingTrackingSystem.BackEnd.Interfaces
         /// <param name="categoryId">The unique identifier for the category.</param>
         /// <returns>A tuple containing a success flag, error message if any, and a list of products.</returns>
         Task<(bool Succeeded, string ErrorMessage, IEnumerable<Product> Products)> GetProductsByCategoryIdAsync(int categoryId);
+
+        /// <summary>
+        /// Asynchronously retrieves all available products for a specific category.
+        /// </summary>
+        /// <param name="categoryId">The unique identifier of the category.</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation. 
+        /// The task result contains a tuple:
+        /// - <c>bool Succeeded</c>: Indicates whether the retrieval was successful.
+        /// - <c>string ErrorMessage</c>: Contains the error message if the retrieval fails.
+        /// - <c>IEnumerable<Product> Products</c>: The collection of available products in the specified category.
+        /// </returns>
+        /// <remarks>
+        /// This method fetches products that belong to the specified category and have a stock quantity greater than zero, 
+        /// indicating that they are available for purchase. It checks if the category exists before fetching the products.
+        /// If the category does not exist, the method returns an error message.
+        /// </remarks>
+        Task<(bool Succeeded, string ErrorMessage, IEnumerable<Product> Products)> GetAvailableProductsByCategoryIdAsync(int categoryId);
     }
 }

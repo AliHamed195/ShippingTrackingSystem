@@ -133,5 +133,27 @@ namespace ShippingTrackingSystem.BackEnd.Repository
                 return (false, ex.Message, Enumerable.Empty<Product>());
             }
         }
+
+        public async Task<(bool Succeeded, string ErrorMessage, IEnumerable<Product> Products)> GetAvailableProductsByCategoryIdAsync(int categoryId)
+        {
+            try
+            {
+                var categoryExists = await _context.Categories.AnyAsync(c => c.Id == categoryId && !c.IsDeleted);
+                if (!categoryExists)
+                {
+                    return (false, "Category not found.", Enumerable.Empty<Product>());
+                }
+
+                var products = await _context.Products
+                    .Where(p => p.CategoryId == categoryId && p.StockQuantity > 0 && !p.IsDeleted)
+                    .ToListAsync();
+
+                return (true, null, products);
+            }
+            catch (Exception ex)
+            {
+                return (false, ex.Message, Enumerable.Empty<Product>());
+            }
+        }
     }
 }
