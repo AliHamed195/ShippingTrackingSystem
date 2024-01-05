@@ -19,6 +19,11 @@ namespace ShippingTrackingSystem.BackEnd.Repository
         {
             try
             {
+                var temp = _context.Categories.Where(c => c.Name == category.Name && c.IsDeleted == false).FirstOrDefault(); 
+                if (temp is null)
+                {
+                    return (false, "The name is exist.", null);
+                }
                 _context.Categories.Add(category);
                 await _context.SaveChangesAsync();
                 return (true, null, category);
@@ -70,6 +75,11 @@ namespace ShippingTrackingSystem.BackEnd.Repository
         {
             try
             {
+                var temp = _context.Categories.Where(c => c.Name == category.Name && c.IsDeleted == false && c.Id != category.Id).FirstOrDefault();
+                if (temp is null)
+                {
+                    return (false, "The name is exist.");
+                }
                 _context.Categories.Update(category);
                 await _context.SaveChangesAsync();
                 return (true, null);
