@@ -40,14 +40,14 @@ namespace ShippingTrackingSystem.Controllers
 
             try
             {
-                var result = await _accountRepository.LoginUserAsync(username: email, password: password, rememberMe: false);
-                if (result.Succeeded)
+                var(Succeeded, ErrorMessage, Result) = await _accountRepository.LoginUserAsync(username: email, password: password, rememberMe: false);
+                if (Succeeded)
                 {
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction(controllerName: "Home", actionName: "HomePage");
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError(string.Empty, $"Error: {ErrorMessage}");
                     return View();
                 }
             }
@@ -81,7 +81,7 @@ namespace ShippingTrackingSystem.Controllers
                         var (updateRoleSucceeded, updateRoleErrorMessage) = await _accountRepository.AssignRoleAsync(user: user, roleName: roleName);
                         if (updateRoleSucceeded)
                         {
-                            return RedirectToAction("UserList");
+                            return RedirectToAction(nameof(Login));
                         }
                         else
                         {
@@ -114,7 +114,7 @@ namespace ShippingTrackingSystem.Controllers
                 await _accountRepository.LogoutUserAsync();
             }
 
-            return RedirectToAction(controllerName: "Account", actionName: "Login");
+            return RedirectToAction(controllerName: "Home", actionName: "HomePage");
         }
     }
 }

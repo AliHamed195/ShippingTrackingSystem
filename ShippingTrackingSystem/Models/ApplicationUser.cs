@@ -12,5 +12,6 @@ namespace ShippingTrackingSystem.Models
 
         public virtual ICollection<Notification>? Notifications { get; set; }
         public virtual ICollection<OrderHistory>? OrderHistories { get; set; }
+        public virtual ICollection<Order>? Orders { get; set; }
     }
 }

@@ -7,6 +7,13 @@ namespace ShippingTrackingSystem.Models
 {
     public class Order
     {
+        public Order()
+        {
+            TrackingNumber = Guid.NewGuid().ToString();
+            OrdersDetails = new HashSet<OrderDetail>();
+            OrderHistories = new HashSet<OrderHistory>();
+        }
+
         public int Id { get; set; }
         public int TotalAmount { get; set; }
         public OrderStatus Status { get; set; }
@@ -18,6 +25,8 @@ namespace ShippingTrackingSystem.Models
         public bool IsDeleted { get; set; } = false;
         public DateTime? EstimatedDeliveryDate { get; set; } = DateTime.Now.AddDays(3);
 
+        public string UserId { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }
         public virtual ICollection<OrderDetail> OrdersDetails { get; set; }
 
         public virtual ICollection<OrderHistory>? OrderHistories { get; set; }

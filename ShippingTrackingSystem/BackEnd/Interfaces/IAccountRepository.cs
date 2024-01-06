@@ -58,7 +58,7 @@ namespace ShippingTrackingSystem.BackEnd.Interfaces
         /// <param name="password">The password of the user.</param>
         /// <param name="rememberMe">Whether to remember the user for future logins.</param>
         /// <returns>A SignInResult indicating the outcome of the login attempt.</returns>
-        Task<SignInResult> LoginUserAsync(string username, string password, bool rememberMe);
+        Task<(bool Succeeded, string ErrorMessage, SignInResult Result)> LoginUserAsync(string username, string password, bool rememberMe);
 
         /// <summary>
         /// Logs out the current user.

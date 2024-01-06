@@ -125,5 +125,21 @@ namespace ShippingTrackingSystem.BackEnd.Repository
             _context.OrderHistory.Add(orderHistory);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<(bool Succeeded, string ErrorMessage, IEnumerable<Order> Orders)> GetAllOrdersByUserIdAsync(string userId)
+        {
+            try
+            {
+                var orders = await _context.Orders
+                    .Where(order => order.UserId == userId && !order.IsDeleted)
+                    .ToListAsync();
+
+                return (true, null, orders);
+            }
+            catch (Exception ex)
+            {
+                return (false, ex.Message, null);
+            }
+        }
     }
 }

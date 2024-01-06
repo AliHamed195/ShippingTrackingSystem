@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ShippingTrackingSystem.Models.Context;
 
@@ -11,9 +12,11 @@ using ShippingTrackingSystem.Models.Context;
 namespace ShippingTrackingSystem.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    partial class MyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240106153433_addRelationBetweenTheOrderhistoryAndProduct")]
+    partial class addRelationBetweenTheOrderhistoryAndProduct
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -305,9 +308,6 @@ namespace ShippingTrackingSystem.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
@@ -327,13 +327,7 @@ namespace ShippingTrackingSystem.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("ApplicationUserId");
 
                     b.ToTable("Orders");
                 });
@@ -522,15 +516,6 @@ namespace ShippingTrackingSystem.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ShippingTrackingSystem.Models.Order", b =>
-                {
-                    b.HasOne("ShippingTrackingSystem.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany("Orders")
-                        .HasForeignKey("ApplicationUserId");
-
-                    b.Navigation("ApplicationUser");
-                });
-
             modelBuilder.Entity("ShippingTrackingSystem.Models.OrderDetail", b =>
                 {
                     b.HasOne("ShippingTrackingSystem.Models.Order", "Order")
@@ -597,8 +582,6 @@ namespace ShippingTrackingSystem.Migrations
                     b.Navigation("Notifications");
 
                     b.Navigation("OrderHistories");
-
-                    b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618
         }

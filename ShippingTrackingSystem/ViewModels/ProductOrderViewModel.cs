@@ -7,5 +7,6 @@
         public int Price { get; set; }
         public int AvailableQuantity { get; set; }
         public int PurchaseQuantity { get; set; }
+        public string? ImagePath { get; set; }
     }
 }

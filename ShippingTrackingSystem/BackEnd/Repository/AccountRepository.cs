@@ -121,17 +121,39 @@ namespace ShippingTrackingSystem.BackEnd.Repository
         }
 
         /// <inheritdoc />
-        public async Task<SignInResult> LoginUserAsync(string username, string password, bool rememberMe)
+        public async Task<(bool Succeeded, string ErrorMessage, SignInResult Result)> LoginUserAsync(string username, string password, bool rememberMe)
         {
             try
             {
-                return await _signInManager.PasswordSignInAsync(username, password, rememberMe, lockoutOnFailure: false);
+                var result = await _signInManager.PasswordSignInAsync(username, password, rememberMe, lockoutOnFailure: false);
+
+                if (result.Succeeded)
+                {
+                    return (true, string.Empty, result);
+                }
+                else if (result.IsLockedOut)
+                {
+                    return (false, "User account is locked out.", result);
+                }
+                else if (result.IsNotAllowed)
+                {
+                    return (false, "User is not allowed to log in.", result);
+                }
+                else if (result.RequiresTwoFactor)
+                {
+                    return (false, "Two-factor authentication is required.", result);
+                }
+                else
+                {
+                    return (false, "Invalid login attempt.", result);
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                return (false, $"Unexpected error: {ex.Message}", null);
             }
         }
+
 
         /// <inheritdoc />
         public async Task<bool> LogoutUserAsync()

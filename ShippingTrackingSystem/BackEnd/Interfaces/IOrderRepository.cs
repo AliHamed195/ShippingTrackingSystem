@@ -10,5 +10,6 @@ namespace ShippingTrackingSystem.BackEnd.Interfaces
         Task<(bool Succeeded, string ErrorMessage)> UpdateOrderAsync(Order order);
         Task<(bool Succeeded, string ErrorMessage)> DeleteOrderAsync(int orderId);
         Task<IEnumerable<OrderHistory>> GetOrderHistoryAsync(int orderId);
+        Task<(bool Succeeded, string ErrorMessage, IEnumerable<Order> Orders)> GetAllOrdersByUserIdAsync(string userId);
     }
 }
