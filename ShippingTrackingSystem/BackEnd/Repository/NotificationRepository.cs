@@ -87,5 +87,19 @@ namespace ShippingTrackingSystem.BackEnd.Repository
                 return false;
             }
         }
+
+        public async Task<int> GetUnreadNotificationCountAsync(string userId)
+        {
+            try
+            {
+                return await _context.Notifications
+                                 .Where(n => n.UserId == userId && !n.IsRead && !n.IsDeleted)
+                                 .CountAsync();
+            }
+            catch (Exception)
+            {
+                return 0;
+            }            
+        }
     }
 }

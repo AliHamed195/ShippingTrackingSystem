@@ -171,6 +171,24 @@
             scroll-behavior: smooth;
         }
 
+        .notification-container{
+            margin-right: 15px;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            font-size:x-large;
+        }
+
+        .notification-count {
+            color: black;
+            font-size: 0.8em;
+            padding: 2px 5px;
+            border-radius: 50%;
+            position: relative;
+            top: -10px;
+            right: -10px;
+        }
+
     </style>
 </head>
 <body>
@@ -258,12 +276,18 @@
             }
             else
             {
-                <form asp-action="Logout" asp-controller="Account" method="post">
-                    <button type="submit" class="btn btn-outline-primary">
-                        <i class="fa fa-right-from-bracket"></i>
-                        Logout
-                    </button>
-                </form>
+                <div class="d-flex">
+                    <a class="notification-container" asp-action="MyNotification" asp-controller="Notification">
+                        <i class="fa-solid fa-comments"></i>
+                        <span class="notification-count" style="display: none;"></span>
+                    </a>
+                    <form asp-action="Logout" asp-controller="Account" method="post">
+                        <button type="submit" class="btn btn-outline-primary">
+                            <i class="fa fa-right-from-bracket"></i>
+                            Logout
+                        </button>
+                    </form>
+                </div>
             }
         </div>
     </nav>
@@ -384,7 +408,30 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/sweetalert2/js/sweetalert2.min.js"></script>
     <script src="~/lib/fontawesome/js/fontawesome.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            function fetchNotificationCount() {
+                $.ajax({
+                    url: '/api/Notifications/UnreadCount',
+                    type: 'GET',
+                    success: function (count) {
+                        if (count > 0) {
+                            $('.notification-count').text(count).show();
+                        } else {
+                            $('.notification-count').hide();
+                        }
+                    },
+                    error: function () {
+                        console.error('Error fetching notification count');
+                    }
+                });
+            }
 
+            fetchNotificationCount();
+            // setInterval(fetchNotificationCount, 30000); // 30 seconds
+        });
+
+    </script>
     @if (!ViewData.ModelState.IsValid)
     {
         <text>

@@ -9,5 +9,7 @@ namespace ShippingTrackingSystem.BackEnd.Interfaces
         Task<Notification> GetNotificationByIdAsync(int notificationId);
         Task<bool> MarkNotificationAsReadAsync(int notificationId);
         Task<bool> DeleteNotificationAsync(int notificationId);
+        Task<int> GetUnreadNotificationCountAsync(string userId);
+
     }
 }

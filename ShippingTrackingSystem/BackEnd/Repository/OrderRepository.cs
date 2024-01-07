@@ -16,15 +16,17 @@ namespace ShippingTrackingSystem.BackEnd.Repository
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IProductRepository _productRepository;
+        private readonly INotificationRepository _notificationRepository;
         private readonly string _editorUserId;
 
-        public OrderRepository(MyDbContext context, IHttpContextAccessor httpContextAccessor, UserManager<ApplicationUser> userManager, IProductRepository productRepository)
+        public OrderRepository(MyDbContext context, IHttpContextAccessor httpContextAccessor, UserManager<ApplicationUser> userManager, IProductRepository productRepository, INotificationRepository notificationRepository)
         {
             _context = context;
             _httpContextAccessor = httpContextAccessor;
             _editorUserId = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
             _userManager = userManager;
             _productRepository = productRepository;
+            _notificationRepository = notificationRepository;
         }
 
         public async Task<(bool Succeeded, string ErrorMessage, Order Order)> CreateOrderAsync(Order order)
@@ -35,6 +37,13 @@ namespace ShippingTrackingSystem.BackEnd.Repository
                 await _context.SaveChangesAsync();
 
                 await SaveOrderHistory(order.Id, order.Status, "Order created.");
+                var notification = new Notification()
+                {
+                    Title = "New Order Confirmation",
+                    Message = $"Your order with Tracking Number: ( {order.TrackingNumber} ) has been successfully created and is currently in '{order.Status}' status.",
+                    UserId = _editorUserId
+                };
+                await _notificationRepository.CreateNotificationAsync(notification);
                 return (true, null, order);
             }
             catch (Exception ex)
@@ -251,6 +260,15 @@ namespace ShippingTrackingSystem.BackEnd.Repository
 
             order.Status = newStatus;
             await _context.SaveChangesAsync();
+
+            var notificationForUpdate = new Notification()
+            {
+                Title = $"Order Status Updated - Order {order.Id}",
+                Message = $"The status of your order with Tracking Number ( {order.TrackingNumber} ) has been updated to '{order.Status}'. Please check your order for more details.",
+                UserId = _editorUserId
+            };
+
+            await _notificationRepository.CreateNotificationAsync(notificationForUpdate);
             return (true, null);
         }
     }
