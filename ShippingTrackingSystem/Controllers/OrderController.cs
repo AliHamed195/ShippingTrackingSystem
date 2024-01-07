@@ -60,8 +60,8 @@ namespace ShippingTrackingSystem.Controllers
         [HttpPost("BuyProducts/{id}")]
         public async Task<IActionResult> BuyProducts(int id, BuyProductsViewModel model)
         {
-            var isValid = model.Products.Any(p => p.PurchaseQuantity > 0);
-            string error = string.Empty;
+            bool isValid = model.Products.Any(p => p.PurchaseQuantity > 0);
+            string error = null;
             if (isValid)
             {
                 var order = new Order
@@ -98,8 +98,12 @@ namespace ShippingTrackingSystem.Controllers
                 }
                 error = createOrderResult.ErrorMessage;
             }
+            else
+            {
+                error = "you should select at least one item";
+            }
 
-            ModelState.AddModelError("", error);
+            ViewBag.error =  error;
             var (success, errorMessage, products) = await _categoryRepository.GetAvailableProductsByCategoryIdAsync(categoryId: id);
             var (categorySucceeded, categoryErrorMessage, category) = await _categoryRepository.GetCategoryByIdAsync(categoryId: id);
             model = new BuyProductsViewModel

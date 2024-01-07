@@ -50,7 +50,10 @@
 
     <div class="form-section">
         <form asp-action="BuyProducts">
-            <div asp-validation-summary="All" class="text-danger"></div>
+            @if (ViewBag.error != null)
+            {
+                <small style="color:red;">@ViewBag.error</small>
+            }
             <input type="hidden" asp-for="CategoryId" />
 
             <table class="table">
@@ -81,8 +84,10 @@
                     }
                 </tbody>
             </table>
-
-            <button type="submit" class="btn btn-primary submit-btn">Place Order</button>
+            @if (Model.Products.Any())
+            {
+                <button type="submit" class="btn btn-primary submit-btn">Place Order</button>
+            }
         </form>
     </div>
 </div>
