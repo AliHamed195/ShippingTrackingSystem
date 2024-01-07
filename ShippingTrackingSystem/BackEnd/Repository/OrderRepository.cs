@@ -15,14 +15,16 @@ namespace ShippingTrackingSystem.BackEnd.Repository
         private readonly MyDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IProductRepository _productRepository;
         private readonly string _editorUserId;
 
-        public OrderRepository(MyDbContext context, IHttpContextAccessor httpContextAccessor, UserManager<ApplicationUser> userManager)
+        public OrderRepository(MyDbContext context, IHttpContextAccessor httpContextAccessor, UserManager<ApplicationUser> userManager, IProductRepository productRepository)
         {
             _context = context;
             _httpContextAccessor = httpContextAccessor;
             _editorUserId = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
             _userManager = userManager;
+            _productRepository = productRepository;
         }
 
         public async Task<(bool Succeeded, string ErrorMessage, Order Order)> CreateOrderAsync(Order order)
@@ -231,25 +233,25 @@ namespace ShippingTrackingSystem.BackEnd.Repository
 
         public async Task<(bool Succeeded, string ErrorMessage)> UpdateOrderStatusAsync(int orderId, OrderStatus newStatus)
         {
-            try
+            var order = await _context.Orders.Include(o => o.OrdersDetails).FirstOrDefaultAsync(o => o.Id == orderId);
+            if (order == null)
             {
-                var order = await _context.Orders.FindAsync(orderId);
-                if (order == null)
+                return (false, "The order not found");
+            }
+
+            if (newStatus == OrderStatus.Canceled && order.Status != OrderStatus.Canceled)
+            {
+                var productQuantities = order.OrdersDetails.ToDictionary(od => od.ProductId, od => od.Quantity);
+                var revertSuccess = await _productRepository.RevertProductQuantitiesAsync(productQuantities);
+                if (!revertSuccess)
                 {
-                    return (false, "Order not found.");
+                    return (false, "can not Revert the items.");
                 }
-
-                order.Status = newStatus;
-                _context.Orders.Update(order);
-                await _context.SaveChangesAsync();
-
-                return (true, string.Empty);
             }
-            catch (Exception ex)
-            {
-                return (false, ex.Message);
-            }
+
+            order.Status = newStatus;
+            await _context.SaveChangesAsync();
+            return (true, null);
         }
-
     }
 }

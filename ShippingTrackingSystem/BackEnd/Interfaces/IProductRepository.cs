@@ -9,5 +9,7 @@ namespace ShippingTrackingSystem.BackEnd.Interfaces
         Task<(bool Succeeded, string ErrorMessage, Product Product)> GetProductByIdAsync(int productId);
         Task<(bool Succeeded, string ErrorMessage)> UpdateProductAsync(Product product);
         Task<(bool Succeeded, string ErrorMessage)> DeleteProductAsync(int productId);
+        Task<bool> RevertProductQuantitiesAsync(Dictionary<int, int> productQuantities);
+
     }
 }

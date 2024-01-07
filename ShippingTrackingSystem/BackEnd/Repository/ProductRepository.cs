@@ -136,5 +136,26 @@ namespace ShippingTrackingSystem.BackEnd.Repository
                 return (false, ex.Message);
             }
         }
+
+        public async Task<bool> RevertProductQuantitiesAsync(Dictionary<int, int> productQuantities)
+        {
+            try
+            {
+                foreach (var entry in productQuantities)
+                {
+                    var product = await _context.Products.FindAsync(entry.Key);
+                    if (product != null)
+                    {
+                        product.StockQuantity += entry.Value;
+                    }
+                }
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
     }
 }
