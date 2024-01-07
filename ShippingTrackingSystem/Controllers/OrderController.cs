@@ -83,6 +83,7 @@ namespace ShippingTrackingSystem.Controllers
                             {
                                 ProductId = item.ProductId,
                                 Quantity = item.PurchaseQuantity,
+                                UnitPrice = product.Price,
                             });
 
                             product.StockQuantity -= item.PurchaseQuantity;
