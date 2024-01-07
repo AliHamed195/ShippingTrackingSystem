@@ -85,9 +85,27 @@
             @if (User.IsInRole("Customer"))
             {
                 <li class="nav-item">
-                    <a class="nav-link" asp-action="UserOrders" asp-controller="Orders">
+                    <a class="nav-link" asp-action="UserOrders" asp-controller="Order">
                         <i class="fa-solid fa-cart-shopping"></i>
                         My Orders
+                    </a>
+                </li>
+            }
+            @if (User.IsInRole("Warehouse"))
+            {
+                <li class="nav-item">
+                    <a class="nav-link" asp-action="GetAllUsersOrders" asp-controller="Order">
+                        <i class="fa-solid fa-warehouse"></i>
+                        Orders
+                    </a>
+                </li>
+            }
+            @if (User.IsInRole("Delivery"))
+            {
+                <li class="nav-item">
+                    <a class="nav-link" asp-action="GetAllUsersOrders" asp-controller="Order">
+                        <i class="fa-solid fa-truck"></i>
+                        Orders
                     </a>
                 </li>
             }

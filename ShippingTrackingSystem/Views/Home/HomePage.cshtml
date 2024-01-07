@@ -223,6 +223,24 @@
                         </a>
                     </li>
                 }
+                @if (User.IsInRole("Warehouse"))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" asp-action="GetAllUsersOrders" asp-controller="Order">
+                            <i class="fa-solid fa-warehouse"></i>
+                            Orders
+                        </a>
+                    </li>
+                }
+                @if (User.IsInRole("Delivery"))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" asp-action="GetAllUsersOrders" asp-controller="Order">
+                            <i class="fa-solid fa-truck"></i>
+                            Orders
+                        </a>
+                    </li>
+                }
             </ul>
         </div>
 

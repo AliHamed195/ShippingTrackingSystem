@@ -181,6 +181,75 @@ namespace ShippingTrackingSystem.BackEnd.Repository
             }
         }
 
-        
+        public async Task<IEnumerable<UserOrderViewModel>> GetOrdersByUserRoleAsync(string userId, UserRole userRole)
+        {
+            try
+            {
+                var ordersQuery = from o in _context.Orders
+                                  join u in _context.Users on o.UserId equals u.Id
+                                  where !o.IsDeleted
+                                  select new { o, u }; 
+
+                if (userRole == UserRole.Warehouse)
+                {
+                    ordersQuery = ordersQuery.Where(x =>
+                        x.o.Status == OrderStatus.InWarehouse ||
+                        x.o.Status == OrderStatus.Preparing ||
+                        x.o.Status == OrderStatus.Pending);
+                }
+                else if (userRole == UserRole.Delivery)
+                {
+                    ordersQuery = ordersQuery.Where(x => x.o.Status == OrderStatus.Dispatched);
+                }
+
+                var orders = await ordersQuery.Select(x => new UserOrderViewModel
+                {
+                    OrderId = x.o.Id,
+                    OrderDate = x.o.CreatedOn,
+                    Status = x.o.Status.ToString(),
+                    TotalAmount = (decimal)x.o.TotalAmount,
+                    TrackingNumber = x.o.TrackingNumber,
+                    EstimatedDeliveryDate = x.o.EstimatedDeliveryDate,
+                    CustomerName = x.u.UserName,
+                    CustomerEmail = x.u.Email,
+                    OrderDetails = x.o.OrdersDetails.Select(od => new OrderDetailViewModel
+                    {
+                        ProductId = od.ProductId,
+                        ProductName = od.Product.Name,
+                        Quantity = od.Quantity,
+                        UnitPrice = (decimal)od.UnitPrice
+                    }).ToList()
+                }).ToListAsync();
+
+                return orders;
+            }
+            catch (Exception ex)
+            {
+                return Enumerable.Empty<UserOrderViewModel>();
+            }
+        }
+
+        public async Task<(bool Succeeded, string ErrorMessage)> UpdateOrderStatusAsync(int orderId, OrderStatus newStatus)
+        {
+            try
+            {
+                var order = await _context.Orders.FindAsync(orderId);
+                if (order == null)
+                {
+                    return (false, "Order not found.");
+                }
+
+                order.Status = newStatus;
+                _context.Orders.Update(order);
+                await _context.SaveChangesAsync();
+
+                return (true, string.Empty);
+            }
+            catch (Exception ex)
+            {
+                return (false, ex.Message);
+            }
+        }
+
     }
 }

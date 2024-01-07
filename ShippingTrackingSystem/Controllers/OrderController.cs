@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using ShippingTrackingSystem.BackEnd.Interfaces;
 using ShippingTrackingSystem.BackEnd.Repository;
 using ShippingTrackingSystem.Enum;
@@ -16,14 +17,16 @@ namespace ShippingTrackingSystem.Controllers
         private readonly IProductRepository _productRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly string _userId;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public OrderController(IOrderRepository orderRepository, ICategoryRepository categoryRepository, IProductRepository productRepository, IHttpContextAccessor httpContextAccessor)
+        public OrderController(IOrderRepository orderRepository, ICategoryRepository categoryRepository, IProductRepository productRepository, IHttpContextAccessor httpContextAccessor, UserManager<ApplicationUser> userManager)
         {
             _orderRepository = orderRepository;
             _categoryRepository = categoryRepository;
             _productRepository = productRepository;
             _httpContextAccessor = httpContextAccessor;
             _userId = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            _userManager = userManager;
         }
 
         [HttpGet("BuyProducts/{id}")]
@@ -130,6 +133,46 @@ namespace ShippingTrackingSystem.Controllers
             return View(orders);
         }
 
+        // GET: Order/UserOrders
+        [HttpGet("AllOrders")]
+        public async Task<IActionResult> GetAllUsersOrders()
+        {
+            var userId = _userManager.GetUserId(User);
+            var user = await _userManager.FindByIdAsync(userId);
+            var userRoles = await _userManager.GetRolesAsync(user);
+            UserRole userRole = DetermineUserRole(userRoles);
+
+            var orders = await _orderRepository.GetOrdersByUserRoleAsync(userId, userRole);
+            return View(orders);
+        }
+
+        [HttpPost("UpdateStatus")]
+        public async Task<IActionResult> UpdateStatus(int orderId, OrderStatus newStatus)
+        {
+            var (Succeeded, ErrorMessage) = await _orderRepository.UpdateOrderStatusAsync(orderId, newStatus);
+
+            if (Succeeded)
+            {
+                return Json(new { success = true, message = "Order status updated successfully." });
+            }
+            else
+            {
+                return Json(new { success = false, message = ErrorMessage });
+            }
+        }
+
+        private UserRole DetermineUserRole(IList<string> userRoles)
+        {
+            if (userRoles.Contains("Warehouse"))
+            {
+                return UserRole.Warehouse;
+            }
+            else if (userRoles.Contains("Delivery"))
+            {
+                return UserRole.Delivery;
+            }
+            return UserRole.Admin;
+        }
 
     }
 
