@@ -3,16 +3,19 @@ using Microsoft.EntityFrameworkCore;
 using ShippingTrackingSystem.BackEnd.Interfaces;
 using ShippingTrackingSystem.Enum;
 using ShippingTrackingSystem.Models;
+using ShippingTrackingSystem.Models.Context;
 
 namespace ShippingTrackingSystem.BackEnd.Repository
 {
     public class SystemStatisticsRepository : ISystemStatisticsRepository
     {
+        private readonly MyDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public SystemStatisticsRepository(UserManager<ApplicationUser> userManager)
+        public SystemStatisticsRepository(UserManager<ApplicationUser> userManager, MyDbContext context)
         {
             _userManager = userManager;
+            _context = context;
         }
 
         /// <inheritdoc />
@@ -68,6 +71,33 @@ namespace ShippingTrackingSystem.BackEnd.Repository
             {
                 return 0;
             }
+        }
+
+        public async Task<Dictionary<string, int>> GetOrderStatusCountsAsync()
+        {
+            return await _context.Orders
+                                 .AsNoTracking()
+                                 .GroupBy(order => order.Status)
+                                 .Select(group => new { Status = group.Key.ToString(), Count = group.Count() })
+                                 .ToDictionaryAsync(k => k.Status, v => v.Count);
+        }
+
+        public async Task<int> GetAvailableProductsCountAsync()
+        {
+            try
+            {
+                return await _context.Products.CountAsync(p => !p.IsDeleted && p.StockQuantity > 0);
+            }
+            catch (Exception) { return 0; }
+        }
+
+        public async Task<int> GetOutOfStockProductsCountAsync()
+        {
+            try
+            {
+                return await _context.Products.CountAsync(p => !p.IsDeleted && p.StockQuantity == 0);
+            }
+            catch (Exception) { return 0; }
         }
     }
 }

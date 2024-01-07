@@ -28,5 +28,13 @@
         /// </summary>
         /// <returns>The number of users in the 'Warehouse' role.</returns>
         Task<int> GetWarehouseRoleUserCountAsync();
+
+        /// <summary>
+        /// Gets counts of orders grouped by their statuses.
+        /// </summary>
+        /// <returns>A dictionary where keys are order statuses and values are counts.</returns>
+        Task<Dictionary<string, int>> GetOrderStatusCountsAsync();
+        Task<int> GetAvailableProductsCountAsync();
+        Task<int> GetOutOfStockProductsCountAsync();
     }
 }

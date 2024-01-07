@@ -41,5 +41,48 @@ namespace ShippingTrackingSystem.Controllers.Api
             int count = await _statsRepo.GetWarehouseRoleUserCountAsync();
             return Ok(new { count });
         }
+
+        [HttpGet("OrderStatusCounts")]
+        public async Task<ActionResult> GetOrderStatusCounts()
+        {
+            try
+            {
+                var orderStatusCounts = await _statsRepo.GetOrderStatusCountsAsync();
+                return Ok(orderStatusCounts);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error: " + ex.Message);
+            }
+        }
+
+        [HttpGet("ProductsAvailable")]
+        public async Task<ActionResult> GetProductsAvailableCount()
+        {
+            try
+            {
+                var count = await _statsRepo.GetAvailableProductsCountAsync();
+                return Ok(count);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error: " + ex.Message);
+            }
+        }
+
+        [HttpGet("ProductsNotAvailable")]
+        public async Task<ActionResult> GetProductsNotAvailableCount()
+        {
+            try
+            {
+                var count = await _statsRepo.GetOutOfStockProductsCountAsync();
+                return Ok(count);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error: " + ex.Message);
+            }
+        }
+
     }
 }
