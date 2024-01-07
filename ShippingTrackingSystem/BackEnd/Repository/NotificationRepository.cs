@@ -27,6 +27,7 @@ namespace ShippingTrackingSystem.BackEnd.Repository
             {
                 return await _context.Notifications
                        .Where(n => n.UserId == userId && !n.IsDeleted)
+                       .OrderByDescending(n => n.CreatedOn)
                        .ToListAsync();
             }
             catch (Exception)
