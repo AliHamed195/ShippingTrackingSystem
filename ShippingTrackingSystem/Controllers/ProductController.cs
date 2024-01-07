@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ShippingTrackingSystem.BackEnd.Interfaces;
 using ShippingTrackingSystem.BackEnd.Repository;
@@ -20,6 +21,7 @@ namespace ShippingTrackingSystem.Controllers
 
         // GET: Product/All
         [HttpGet("All")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AllProducts()
         {
             var (success, errorMessage, products) = await _productRepository.GetAllProductsAsync();
@@ -37,6 +39,7 @@ namespace ShippingTrackingSystem.Controllers
 
         // GET: Product/Create
         [HttpGet("Create")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create()
         {
             var (success, errorMessage, categories) = await _categoryRepository.GetAllCategoriesAsync();
@@ -47,6 +50,7 @@ namespace ShippingTrackingSystem.Controllers
         // POST: Product/Create
         [HttpPost("Create")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(Product product)
         {
             if (ModelState.IsValid)
@@ -67,6 +71,7 @@ namespace ShippingTrackingSystem.Controllers
 
         // GET: Product/Edit/5
         [HttpGet("Edit/{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id)
         {
             var (categorySuccess, categoryErrorMessage, categories) = await _categoryRepository.GetAllCategoriesAsync();
@@ -85,6 +90,7 @@ namespace ShippingTrackingSystem.Controllers
         // POST: Product/Edit/5
         [HttpPost("Edit/{id}")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, Product product)
         {
             if (ModelState.IsValid)
@@ -107,6 +113,7 @@ namespace ShippingTrackingSystem.Controllers
 
         // POST: Product/Delete/5
         [HttpPost("Delete/{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             try

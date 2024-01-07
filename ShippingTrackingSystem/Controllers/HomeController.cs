@@ -30,7 +30,7 @@ namespace ShippingTrackingSystem.Controllers
             return View(Enumerable.Empty<Category>());
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = "Admin")]
         public IActionResult AdminPage()
         {
             return View();

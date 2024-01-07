@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using ShippingTrackingSystem.BackEnd.Interfaces;
 using ShippingTrackingSystem.BackEnd.Repository;
@@ -18,6 +19,7 @@ namespace ShippingTrackingSystem.Controllers
 
         // GET: Categories/All
         [HttpGet("All")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AllCategories()
         {
             var (success, errorMessage, categories) = await _categoryRepository.GetAllCategoriesAsync();
@@ -32,6 +34,7 @@ namespace ShippingTrackingSystem.Controllers
 
         // GET: Category/Create
         [HttpGet("Create")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
@@ -40,6 +43,7 @@ namespace ShippingTrackingSystem.Controllers
         // POST: Category/Create
         [HttpPost("Create")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(Category category)
         {
             if (ModelState.IsValid)
@@ -56,6 +60,7 @@ namespace ShippingTrackingSystem.Controllers
 
         // GET: Category/Edit/5
         [HttpGet("Edit/{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id is null)
@@ -76,6 +81,7 @@ namespace ShippingTrackingSystem.Controllers
         // POST: Category/Edit/5
         [HttpPost("Edit/{id}")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, Category category)
         {
             if (id != category.Id)
@@ -98,6 +104,7 @@ namespace ShippingTrackingSystem.Controllers
 
         // POST: Category/Delete/5
         [HttpPost("Delete/{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             try
@@ -120,6 +127,7 @@ namespace ShippingTrackingSystem.Controllers
 
         // GET: Category/Products/5
         [HttpGet("Products/{id}")]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> CategoryProducts(int id)
         {
             var (success, errorMessage, products) = await _categoryRepository.GetProductsByCategoryIdAsync(categoryId: id);

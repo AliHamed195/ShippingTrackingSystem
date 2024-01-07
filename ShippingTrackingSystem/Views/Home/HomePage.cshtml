@@ -316,8 +316,11 @@
                                 <div class="card-body">
                                     <h5 class="card-title">@item.Name</h5>
                                     <p class="card-text">@item.Description</p>
-                                    <!-- The button is initially positioned off the bottom of the card -->
-                                    <a class="category-card-button" asp-route-id="@item.Id" asp-action="BuyProducts" asp-controller="Order">Learn More</a>
+                                    @if (User.IsInRole("Customer"))
+                                    {
+                                        <!-- The button is initially positioned off the bottom of the card -->
+                                        <a class="category-card-button" asp-route-id="@item.Id" asp-action="BuyProducts" asp-controller="Order">Learn More</a>
+                                    }
                                 </div>
                             </div>
                         </div>

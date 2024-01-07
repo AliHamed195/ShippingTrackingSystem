@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using ShippingTrackingSystem.BackEnd.Interfaces;
 using ShippingTrackingSystem.BackEnd.Repository;
@@ -30,6 +31,7 @@ namespace ShippingTrackingSystem.Controllers
         }
 
         [HttpGet("BuyProducts/{id}")]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> BuyProducts(int id)
         {
             var (success, errorMessage, products) = await _categoryRepository.GetAvailableProductsByCategoryIdAsync(categoryId: id);
@@ -61,6 +63,7 @@ namespace ShippingTrackingSystem.Controllers
         }
 
         [HttpPost("BuyProducts/{id}")]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> BuyProducts(int id, BuyProductsViewModel model)
         {
             bool isValid = model.Products.Any(p => p.PurchaseQuantity > 0);
@@ -126,6 +129,7 @@ namespace ShippingTrackingSystem.Controllers
         }
 
         [HttpGet("UserOrders")]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> UserOrders()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -135,6 +139,7 @@ namespace ShippingTrackingSystem.Controllers
 
         // GET: Order/UserOrders
         [HttpGet("AllOrders")]
+        [Authorize(Roles = "Delivery, Warehouse")]
         public async Task<IActionResult> GetAllUsersOrders()
         {
             var userId = _userManager.GetUserId(User);
@@ -147,6 +152,7 @@ namespace ShippingTrackingSystem.Controllers
         }
 
         [HttpPost("UpdateStatus")]
+        [Authorize]
         public async Task<IActionResult> UpdateStatus(int orderId, OrderStatus newStatus)
         {
             var (Succeeded, ErrorMessage) = await _orderRepository.UpdateOrderStatusAsync(orderId, newStatus);

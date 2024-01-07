@@ -60,6 +60,7 @@ namespace ShippingTrackingSystem.Controllers
 
         // GET: Account/Register
         [HttpGet("Register")]
+        [AllowAnonymous]
         public IActionResult Register()
         {
             return View();
@@ -68,6 +69,7 @@ namespace ShippingTrackingSystem.Controllers
         // POST: Account/Register
         [HttpPost("Register")]
         [ValidateAntiForgeryToken]
+        [AllowAnonymous]
         public async Task<IActionResult> Register(ApplicationUser user, string password)
         {
             if (ModelState.IsValid)
@@ -107,6 +109,7 @@ namespace ShippingTrackingSystem.Controllers
 
         // POST: Account/Logout
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Logout()
         {
             if (User.Identity.IsAuthenticated)

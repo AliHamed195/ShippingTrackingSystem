@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ShippingTrackingSystem.Controllers
 {
     [Route("Notification")]
+    [Authorize]
     public class NotificationController : Controller
     {
         [HttpGet("My")]

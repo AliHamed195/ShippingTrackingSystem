@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ShippingTrackingSystem.BackEnd.Interfaces;
 using ShippingTrackingSystem.Models;
@@ -6,6 +7,7 @@ using ShippingTrackingSystem.Models;
 namespace ShippingTrackingSystem.Controllers
 {
     [Route("User")]
+    [Authorize(Roles = "Admin")]
     public class UserController : Controller
     {
         private readonly IAccountRepository _accountRepository;

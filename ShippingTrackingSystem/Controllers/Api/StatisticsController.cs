@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ShippingTrackingSystem.BackEnd.Interfaces;
 
 namespace ShippingTrackingSystem.Controllers.Api
 {
     [ApiController]
     [Route("api/statistics")]
+    [Authorize]
     public class StatisticsController : Controller
     {
         private readonly ISystemStatisticsRepository _statsRepo;
