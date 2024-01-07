@@ -265,7 +265,7 @@ namespace ShippingTrackingSystem.BackEnd.Repository
             {
                 Title = $"Order Status Updated - Order {order.Id}",
                 Message = $"The status of your order with Tracking Number ( {order.TrackingNumber} ) has been updated to '{order.Status}'. Please check your order for more details.",
-                UserId = _editorUserId
+                UserId = order.UserId
             };
 
             await _notificationRepository.CreateNotificationAsync(notificationForUpdate);

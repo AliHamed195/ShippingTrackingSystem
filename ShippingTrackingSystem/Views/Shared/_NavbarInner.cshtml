@@ -34,8 +34,26 @@
         margin-right: 10px !important;
     }
 
-    form{
+    form {
         padding: 0 !important;
+    }
+
+    .notification-container {
+        margin-right: 15px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: x-large;
+    }
+
+    .notification-count {
+        color: black;
+        font-size: 0.8em;
+        padding: 2px 5px;
+        border-radius: 50%;
+        position: relative;
+        top: -10px;
+        right: -10px;
     }
 
 </style>
@@ -115,12 +133,18 @@
     <div class="account-btns">
         @if (User.Identity.IsAuthenticated)
         {
-            <form asp-action="Logout" asp-controller="Account" method="post">
-                <button type="submit" class="btn btn-outline-primary">
-                    <i class="fa fa-right-from-bracket"></i>
-                    Logout
-                </button>
-            </form>
+            <div class="d-flex">
+                <a class="notification-container" asp-action="MyNotification" asp-controller="Notification">
+                    <i class="fa-solid fa-comments"></i>
+                    <span class="notification-count" style="display: none;"></span>
+                </a>
+                <form asp-action="Logout" asp-controller="Account" method="post">
+                    <button type="submit" class="btn btn-outline-primary">
+                        <i class="fa fa-right-from-bracket"></i>
+                        Logout
+                    </button>
+                </form>
+            </div>
         }
     </div>
 </nav>

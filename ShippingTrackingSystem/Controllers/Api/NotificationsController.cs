@@ -17,10 +17,11 @@ namespace ShippingTrackingSystem.Controllers.Api
             _notificationRepository = notificationRepository;
         }
 
-        // GET: api/Notifications/User/{userId}
-        [HttpGet("User/{userId}")]
-        public async Task<IActionResult> GetUserNotifications(string userId)
+        // GET: api/Notifications/User
+        [HttpGet("User")]
+        public async Task<IActionResult> GetUserNotifications()
         {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var notifications = await _notificationRepository.GetUserNotificationsAsync(userId);
             return Ok(notifications);
         }

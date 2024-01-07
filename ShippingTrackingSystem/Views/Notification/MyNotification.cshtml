@@ -1,0 +1,125 @@
+﻿@{
+    ViewData["Title"] = "My Notifications";
+}
+
+<style>
+    .notification-container-all {
+        max-width: 800px;
+        margin: auto;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+        .notification-container-all h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+    .notification-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .notification-item {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .notification-content {
+        flex-grow: 1;
+        min-width: 250px;
+    }
+
+        .notification-content h3 {
+            margin: 0;
+            color: #0056b3;
+        }
+
+        .notification-content p {
+            margin: 5px 0;
+        }
+
+    .notification-date {
+        font-size: 0.8em;
+        color: #666;
+    }
+
+    .notification-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+        .notification-actions a {
+            color: #333;
+            text-decoration: none;
+        }
+
+            .notification-actions a:hover {
+                color: #0056b3;
+            }
+
+    .mark-as-read-btn i, .delete-btn i {
+        font-size: 1.2em;
+    }
+
+</style>
+
+<div class="notification-container-all">
+    <h2>My Notifications</h2>
+    <ul class="notification-list" id="notificationList">
+
+    </ul>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            function loadNotifications() {
+                $.ajax({
+                    url: '/api/Notifications/User',
+                    method: 'GET',
+                    success: function (notifications) {
+                        if (notifications.length > 0) {
+                            notifications.forEach(function (notification) {
+                                $('#notificationList').append(`
+                                            <li class="notification-item">
+                                                <div class="notification-content">
+                                                    <h3>${notification.title}</h3>
+                                                    <p>${notification.message}</p>
+                                                    <span class="notification-date">${new Date(notification.createdOn).toLocaleString()}</span>
+                                                </div>
+                                                <div class="notification-actions">
+                                                    <a href="/Notification/MarkAsRead/${notification.id}" class="mark-as-read-btn">
+                                                        <i class="fa fa-check" aria-hidden="true"></i>
+                                                    </a>
+                                                    <a href="/Notification/Delete/${notification.id}" class="delete-btn">
+                                                        <i class="fa fa-trash" aria-hidden="true"></i>
+                                                    </a>
+                                                </div>
+                                            </li>
+                                        `);
+                            });
+                        } else {
+                            $('#notificationList').append('<p>No notifications found.</p>');
+                        }
+                    },
+                    error: function () {
+                        $('#notificationList').append('<p>Error loading notifications.</p>');
+                    }
+                });
+            }
+
+            loadNotifications();
+        });
+    </script>
+}
