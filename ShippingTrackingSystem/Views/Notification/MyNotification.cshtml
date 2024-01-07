@@ -72,6 +72,10 @@
         font-size: 1.2em;
     }
 
+    .notification-item.unread {
+        background-color: #e7f3fe;
+    }
+
 </style>
 
 <div class="notification-container-all">
@@ -91,18 +95,19 @@
                     success: function (notifications) {
                         if (notifications.length > 0) {
                             notifications.forEach(function (notification) {
+                                var notificationClass = notification.isRead ? '' : 'unread';
                                 $('#notificationList').append(`
-                                            <li class="notification-item">
+                                            <li class="notification-item ${notificationClass}">
                                                 <div class="notification-content">
                                                     <h3>${notification.title}</h3>
                                                     <p>${notification.message}</p>
                                                     <span class="notification-date">${new Date(notification.createdOn).toLocaleString()}</span>
                                                 </div>
                                                 <div class="notification-actions">
-                                                    <a href="/Notification/MarkAsRead/${notification.id}" class="mark-as-read-btn">
+                                                    ${!notification.isRead ? `<a href="#" class="mark-as-read-btn" data-id="${notification.id}">
                                                         <i class="fa fa-check" aria-hidden="true"></i>
-                                                    </a>
-                                                    <a href="/Notification/Delete/${notification.id}" class="delete-btn">
+                                                    </a>` : ''}
+                                                    <a href="#" class="delete-btn" data-id="${notification.id}">
                                                         <i class="fa fa-trash" aria-hidden="true"></i>
                                                     </a>
                                                 </div>
@@ -119,7 +124,92 @@
                 });
             }
 
+            $('#notificationList').on('click', '.delete-btn', function (e) {
+                e.preventDefault();
+                var notificationId = $(this).data('id');
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: 'You will not be able to recover this notification!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: '/api/Notifications/' + notificationId,
+                            method: 'DELETE',
+                            success: function () {
+                                $(`li.notification-item:has(a.delete-btn[data-id="${notificationId}"])`).remove();
+                                Swal.fire(
+                                    'Deleted!',
+                                    'Your notification has been deleted.',
+                                    'success'
+                                );
+                                decrementNotificationCount();
+                            },
+                            error: function () {
+                                Swal.fire(
+                                    'Error!',
+                                    'Error occurred while deleting the notification.',
+                                    'error'
+                                );
+                            }
+                        });
+                    }
+                });
+            });
+
+
+            $('#notificationList').on('click', '.mark-as-read-btn', function (e) {
+                e.preventDefault();
+                var notificationId = $(this).data('id');
+                $.ajax({
+                    url: '/api/Notifications/MarkAsRead/' + notificationId,
+                    method: 'PUT',
+                    success: function () {
+                        var li = $(`li.notification-item:has(a.mark-as-read-btn[data-id="${notificationId}"])`);
+                        li.removeClass('unread');
+                        li.find('.mark-as-read-btn').remove();
+                        decrementNotificationCount();
+                    },
+                    error: function () {
+                        alert('Error marking notification as read.');
+                    }
+                });
+            });
+
             loadNotifications();
+
+            function fetchNotificationCount() {
+                $.ajax({
+                    url: '/api/Notifications/UnreadCount',
+                    type: 'GET',
+                    success: function (count) {
+                        updateNotificationCount(count);
+                    },
+                    error: function () {
+                        console.error('Error fetching notification count');
+                    }
+                });
+            }
+
+            function updateNotificationCount(count) {
+                if (count > 0) {
+                    $('.notification-count').text(count).show();
+                } else {
+                    $('.notification-count').hide();
+                }
+            }
+
+            function decrementNotificationCount() {
+                var currentCount = parseInt($('.notification-count').text());
+                var newCount = currentCount - 1;
+                updateNotificationCount(newCount);
+            }
+
+            fetchNotificationCount();
         });
     </script>
 }
