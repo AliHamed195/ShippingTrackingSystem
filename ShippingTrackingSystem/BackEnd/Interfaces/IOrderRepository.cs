@@ -1,4 +1,5 @@
 ﻿using ShippingTrackingSystem.Models;
+using ShippingTrackingSystem.ViewModels;
 
 namespace ShippingTrackingSystem.BackEnd.Interfaces
 {
@@ -11,5 +12,7 @@ namespace ShippingTrackingSystem.BackEnd.Interfaces
         Task<(bool Succeeded, string ErrorMessage)> DeleteOrderAsync(int orderId);
         Task<IEnumerable<OrderHistory>> GetOrderHistoryAsync(int orderId);
         Task<(bool Succeeded, string ErrorMessage, IEnumerable<Order> Orders)> GetAllOrdersByUserIdAsync(string userId);
+        Task<IEnumerable<UserOrderViewModel>> GetUserOrdersAsync(string userId);
+
     }
 }

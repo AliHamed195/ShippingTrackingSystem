@@ -1,8 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ShippingTrackingSystem.BackEnd.Interfaces;
 using ShippingTrackingSystem.Enum;
 using ShippingTrackingSystem.Models;
 using ShippingTrackingSystem.Models.Context;
+using ShippingTrackingSystem.ViewModels;
 using System.Security.Claims;
 
 namespace ShippingTrackingSystem.BackEnd.Repository
@@ -10,14 +13,16 @@ namespace ShippingTrackingSystem.BackEnd.Repository
     public class OrderRepository : IOrderRepository
     {
         private readonly MyDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly string _editorUserId;
 
-        public OrderRepository(MyDbContext context, IHttpContextAccessor httpContextAccessor)
+        public OrderRepository(MyDbContext context, IHttpContextAccessor httpContextAccessor, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _httpContextAccessor = httpContextAccessor;
             _editorUserId = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            _userManager = userManager;
         }
 
         public async Task<(bool Succeeded, string ErrorMessage, Order Order)> CreateOrderAsync(Order order)
@@ -141,5 +146,41 @@ namespace ShippingTrackingSystem.BackEnd.Repository
                 return (false, ex.Message, null);
             }
         }
+
+        public async Task<IEnumerable<UserOrderViewModel>> GetUserOrdersAsync(string userId)
+        {
+            try
+            {
+                var user = await _userManager.FindByIdAsync(userId);
+                var orders = await _context.Orders
+                    .Where(o => o.UserId == userId && !o.IsDeleted)
+                    .Select(o => new UserOrderViewModel
+                    {
+                        OrderId = o.Id,
+                        OrderDate = o.CreatedOn,
+                        Status = o.Status.ToString(),
+                        TotalAmount = (decimal)o.TotalAmount,
+                        TrackingNumber = o.TrackingNumber,
+                        EstimatedDeliveryDate = o.EstimatedDeliveryDate,
+                        CustomerName = user.UserName,
+                        CustomerEmail = user.Email,
+                        OrderDetails = o.OrdersDetails.Select(od => new OrderDetailViewModel
+                        {
+                            ProductId = od.ProductId,
+                            ProductName = od.Product.Name,
+                            Quantity = od.Quantity,
+                            UnitPrice = (decimal)od.UnitPrice
+                        })
+                    }).ToListAsync();
+
+                return orders;
+            }
+            catch (Exception ex)
+            {
+                return Enumerable.Empty<UserOrderViewModel>();
+            }
+        }
+
+        
     }
 }

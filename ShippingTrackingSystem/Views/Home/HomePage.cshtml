@@ -217,7 +217,7 @@
                 @if (User.IsInRole("Customer"))
                 {
                     <li class="nav-item">
-                        <a class="nav-link" asp-action="UserOrders" asp-controller="Orders">
+                        <a class="nav-link" asp-action="UserOrders" asp-controller="Order">
                             <i class="fa fa-cart-shopping"></i>
                             My Orders
                         </a>
@@ -275,7 +275,7 @@
                                     <h5 class="card-title">@item.Name</h5>
                                     <p class="card-text">@item.Description</p>
                                     <!-- The button is initially positioned off the bottom of the card -->
-                                    <a class="category-card-button" asp-route-id="@item.Id" asp-action="GetProductsForCategory" asp-controller="Product">Learn More</a>
+                                    <a class="category-card-button" asp-route-id="@item.Id" asp-action="BuyProducts" asp-controller="Order">Learn More</a>
                                 </div>
                             </div>
                         </div>
